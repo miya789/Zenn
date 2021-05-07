@@ -3,14 +3,14 @@ title: "Github Actions が RuboCop できないのはどう考えてもお前ら
 emoji: "🐶"
 type: "tech"
 topics: [githubactions, rubocop, reviewdog]
-published: false
+published: true
 ---
 
 ## TL;DR
 
 - `reviewdog/action-rubocop` は設定が少なくて済むのでお勧め
 - `on: push` でトリガーされた Actions は PR 内であっても認識しないので，これを動かす時は， `on: pull_request` 推奨 (それはそう)
-- 要は，以下の様に公式の通りにすれば問題無いです
+- 要は，以下の様に公式準拠にすれば問題無いです
 
 ```yml:rubocop.yml
 name: reviewdog
@@ -55,8 +55,9 @@ https://github.com/andrewmcodes-archive/rubocop-linter-action
 
 ### 1. `reviewdog/action-rubocop`
 
-まず， `reviewdog/action-rubocop` (以下， `action-rubocop`) は [reviewdog/reviewdog](https://github.com/reviewdog/reviewdog) の系列のものらしく，他にも GitHub の PR にコメントしてくるツールを色々提供してくれているようで，使い勝手も良い雰囲気でした
-やはり犬は可愛いですね (∪＾ω＾)
+`reviewdog/action-rubocop` (以下， `action-rubocop`) は [reviewdog/reviewdog](https://github.com/reviewdog/reviewdog) の系列のものらしいです
+他にも GitHub の PR にコメントしてくるツールを色々提供してくれているようで，使い勝手も良い雰囲気でしたすが，設定項目は本家の [reviewdog/reviewdog](https://github.com/reviewdog/reviewdog) を見た方が良さそうでした
+やはり犬は可愛いですね (U^ω^)
 
 ![](https://storage.googleapis.com/zenn-user-upload/1o37lz2lic5u28eeuhvk8rhp58jb)
 
@@ -218,7 +219,7 @@ jobs:
 私は数年前にアニメで見た程度のにわかですが，
 「気持ち悪さ」の描写が的確で共感性羞恥心を抉られる話で良かったです
 最近は百合展開になったり，ロシアで人気になったり[^watamote-russia]で話題に事欠かず再燃の機運が高まっていますね
-この記事を見てしまった方は，この機会に視聴してみてはいかがでしょうか
+この記事を見てしまった方は，この機会に もこっち の勇姿を見届けてはいかがでしょうか
 
 [^rubocop-challenger]: [RuboCop Challenger を GitHub Actions で動かす](https://zenn.dev/yamat47/articles/219e14ebcf31a1d13ff4)
 [^rubocop-setup]: [reviewdog/action-rubocop 実行時に起きた Gem::FilePermissionError の対処](https://zenn.dev/m_yamashii/articles/bf6a52a71f887d)
