@@ -1,5 +1,5 @@
 ---
-title: "Github Actions が RuboCop できないのはどう考えてもお前らが悪い！"
+title: "GitHub Actions が PR のコメントで RuboCop できないのはどう考えてもお前らが悪い！"
 emoji: "🐶"
 type: "tech"
 topics: [githubactions, rubocop, reviewdog]
