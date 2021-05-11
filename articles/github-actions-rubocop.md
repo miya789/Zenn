@@ -8,7 +8,7 @@ published: true
 
 ## TL;DR
 
-- `reviewdog/action-rubocop` は設定が少なくて済むのでお勧め
+- `reviewdog/action-rubocop` は PR の差分に対しての Rubocop 結果を PR 内でコメントしてくれるのでお薦め
 - `on: push` でトリガーされた Actions は PR 内であっても認識しないので，これを動かす時は， `on: pull_request` 推奨 (それはそう)
 - 要は，以下の様に公式準拠にすれば問題無いです
 
@@ -139,6 +139,7 @@ Broken pipe @ io_write - <STDOUT>
 因みにこの場合はエラーは吐きません
 これは `on: [push, pull_request]` もしくは `on: pull_request` で直りました
 `on: push` でトリガーされた Actions は PR 内であっても認識しないので (それはそう)
+`rubocop-linter-action` (使わない方) では `push` だったので混同しますね……
 
 ```diff yaml:.github/workflows/rubocop.yml
 name: reviewdog
@@ -161,7 +162,6 @@ Error: Process completed with exit code 1.
 ```
 
 別の lint の Issue でも同じ内容が質問されていましたが[^action-tflint/issues/21]， `actions/checkout@v2` を忘れると起きます
-`rubocop-linter-action` (使わない方) では `push` だったので混同しますね……
 
 ```diff yaml:.github/workflows/rubocop.yml
 ...
@@ -219,7 +219,7 @@ jobs:
 私は数年前にアニメで見た程度のにわかですが，
 「気持ち悪さ」の描写が的確で共感性羞恥心を抉られる話で良かったです
 最近は百合展開になったり，ロシアで人気になったり[^watamote-russia]で話題に事欠かず再燃の機運が高まっていますね
-この記事を見てしまった方は，この機会に もこっち の勇姿を見届けてはいかがでしょうか
+この記事を見てしまった方は，この機会に もこっち の勇姿を見届けてはいかがでしょうか?
 
 [^rubocop-challenger]: [RuboCop Challenger を GitHub Actions で動かす](https://zenn.dev/yamat47/articles/219e14ebcf31a1d13ff4)
 [^rubocop-setup]: [reviewdog/action-rubocop 実行時に起きた Gem::FilePermissionError の対処](https://zenn.dev/m_yamashii/articles/bf6a52a71f887d)
