@@ -6,7 +6,7 @@ topics: [githubactions, rubocop, reviewdog]
 published: true
 ---
 
-## TL;DR
+# TL;DR
 
 - `reviewdog/action-rubocop` は PR の差分に対しての Rubocop 結果を PR 内でコメントしてくれるのでお薦め
 - `on: push` でトリガーされた Actions は PR 内であっても認識しないので，これを動かす時は， `on: pull_request` 推奨 (それはそう)
@@ -34,40 +34,39 @@ jobs:
           reporter: github-pr-review # Default is github-pr-check
 ```
 
----
-
-## 目的
+# 目的
 
 他の記事でも触れられている通り，冒頭の様に `reviewdog/action-rubocop` の公式ドキュメントに準拠する事に尽きます
 しかし実際に利用するに当たり様々なエラーに直面しましたので，\
 簡単に GitHub Actions で使える RuboCop を紹介した後に， `reviewdog/action-rubocop` で生じるエラーに関して簡単に述べます
 
----
-
-## Github Actions で動かす RuboCop
+# GitHub Actions で動かす RuboCop
 
 取り敢えず以下の 2 つを見つけましたが，
 結論としては [`reviewdog/action-rubocop`](https://github.com/reviewdog/action-rubocop) の方が GitHub との親和性も高く便利に思われます
+
 順に見てみます
 
 https://github.com/reviewdog/action-rubocop
 https://github.com/andrewmcodes-archive/rubocop-linter-action
 
-### 1. `reviewdog/action-rubocop`
+## 1. `reviewdog/action-rubocop`
 
 `reviewdog/action-rubocop` (以下， `action-rubocop`) は [reviewdog/reviewdog](https://github.com/reviewdog/reviewdog) の系列のものらしいです
 他にも GitHub の PR にコメントしてくるツールを色々提供してくれているようで，使い勝手も良い雰囲気でしたすが，設定項目は本家の [reviewdog/reviewdog](https://github.com/reviewdog/reviewdog) を見た方が良さそうでした
 やはり犬は可愛いですね (U^ω^)
 
-![](https://storage.googleapis.com/zenn-user-upload/1o37lz2lic5u28eeuhvk8rhp58jb)
+[![action-rubocopを使ったPRの表示例](https://storage.googleapis.com/zenn-user-upload/1o37lz2lic5u28eeuhvk8rhp58jb)](https://github.com/miya789/RubocopReviewTest/pull/1)
+_`action-rubocop` を使った PR の表示例． github-actions という Bot が，Rubocop 違反箇所を勝手にコメントで指摘してくれます．_
 
-### 2. `andrewmcodes-archive/rubocop-linter-action`
+## 2. `andrewmcodes-archive/rubocop-linter-action`
 
 一方の `andrewmcodes-archive/rubocop-linter-action` (以下， `rubocop-linter-action` )は，
 公式リポジトリがアーカイブされていて少し微妙でした
 
 まずこれはコメントでは指摘してくれません
-![](https://storage.googleapis.com/zenn-user-upload/6k87lepan1tw4l3azw3d9ceupift)
+[![rubocop-linter-actionを使ったPRの表示例](https://storage.googleapis.com/zenn-user-upload/6k87lepan1tw4l3azw3d9ceupift)](https://github.com/miya789/RubocopReviewTest/pull/5)
+_`rubocop-linter-action` を使った PR の表示例． Rubocop で違反箇所があると GitHub Actions が落ちます．_
 
 そして PR の `Files changed` では変更したファイルに限定してアノテーションを表示してくれますが，
 **変更したファイルの変更箇所とは異なる部分であっても RuboCop の意に沿わない部分があると全て晒し上げられます**
@@ -92,7 +91,7 @@ https://github.com/andrewmcodes-archive/rubocop-linter-action
 GitHub Actions が落ちますし，コメントやアノテーションで見るならやはり rubocop-linter-action は微妙そうです [^hai3.net/blog]
 (あまり使わない線で考えていたので深追いはしません)
 
-### まとめ
+## まとめ
 
 という訳で `action-rubocop` に焦点を絞って紹介していきます
 
@@ -102,9 +101,7 @@ RuboCop Challenger という gem を GitHub Actions で動かす方法もある�
 これで， RuboCop のルールを容易にカスタマイズできますね
 :::
 
----
-
-## `action-rubocop` のエラー例
+# `action-rubocop` のエラー例
 
 エラーメッセージのみからは類推が難しい場合が多かったので，一応纏めておきます
 
@@ -126,7 +123,7 @@ end
 
 :::
 
-### `this is not PullRequest build`
+## `this is not PullRequest build`
 
 ```bash
 Running rubocop with reviewdog 🐶 ...
@@ -153,7 +150,7 @@ jobs:
 動作例: https://github.com/miya789/RubocopReviewTest/runs/2523903323?check_suite_focus=true
 :::
 
-### `reviewdog: failed to run 'git rev-parse --show-prefix': exit status 128.`
+## `reviewdog: failed to run 'git rev-parse --show-prefix': exit status 128.`
 
 ```bash
 Running rubocop with reviewdog 🐶 ...
@@ -179,7 +176,7 @@ jobs:
 動作例: https://github.com/miya789/RubocopReviewTest/pull/3/checks?check_run_id=2523887864
 :::
 
-### `You don't have write permissions for the /var/lib/gems/2.7.0 directory.`
+## `You don't have write permissions for the /var/lib/gems/2.7.0 directory.`
 
 ```bash
 Installing rubocop with extensions ... https://github.com/rubocop/rubocop
@@ -211,9 +208,7 @@ jobs:
 動作例: https://github.com/miya789/RubocopReviewTest/pull/2/checks?check_run_id=2523873135
 :::
 
----
-
-## 補足
+# 補足
 
 [私がモテないのはどう考えてもお前らが悪い!](https://www.ganganonline.com/contents/watashiga/)(以下，わたモテ)に関して，
 私は数年前にアニメで見た程度のにわかですが，
