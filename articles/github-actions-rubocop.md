@@ -45,6 +45,11 @@ jobs:
 取り敢えず以下の 2 つを見つけましたが，
 結論としては [`reviewdog/action-rubocop`](https://github.com/reviewdog/action-rubocop) の方が GitHub との親和性も高く便利に思われます
 
+| ライブラリ                                                                                          | 差分に対しての Rubocop 適用 | PR 内でコメント        |
+| --------------------------------------------------------------------------------------------------- | --------------------------- | ---------------------- |
+| [1. `reviewdog/action-rubocop`](#1.-reviewdog%2Faction-rubocop)                                     | ✅                          | ✅                     |
+| [2. `andrewmcodes-archive/rubocop-linter-action`](#2.-andrewmcodes-archive%2Frubocop-linter-action) | ❌                          | ❌(アノテーションのみ) |
+
 順に見てみます
 
 https://github.com/reviewdog/action-rubocop
