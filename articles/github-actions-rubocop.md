@@ -61,8 +61,7 @@ https://github.com/andrewmcodes-archive/rubocop-linter-action
 他にも GitHub の PR にコメントしてくるツールを色々提供してくれているようで，使い勝手も良い雰囲気でしたすが，設定項目は本家の [reviewdog/reviewdog](https://github.com/reviewdog/reviewdog) を見た方が良さそうでした
 やはり犬は可愛いですね (U^ω^)
 
-[![action-rubocopを使ったPRの表示例](https://storage.googleapis.com/zenn-user-upload/1o37lz2lic5u28eeuhvk8rhp58jb)](https://github.com/miya789/RubocopReviewTest/pull/1)
-_`action-rubocop` を使った PR の表示例． github-actions という Bot が，Rubocop 違反箇所を勝手にコメントで指摘してくれます．_
+[![action-rubocopを使ったPRの表示例](https://storage.googleapis.com/zenn-user-upload/1o37lz2lic5u28eeuhvk8rhp58jb)_`action-rubocop` を使った PR の表示例． github-actions という Bot が，Rubocop 違反箇所を勝手にコメントで指摘してくれます．_](https://github.com/miya789/RubocopReviewTest/pull/1)
 
 ## 2. `andrewmcodes-archive/rubocop-linter-action`
 
@@ -70,8 +69,7 @@ _`action-rubocop` を使った PR の表示例． github-actions という Bot �
 公式リポジトリがアーカイブされていて少し微妙でした
 
 まずこれはコメントでは指摘してくれません
-[![rubocop-linter-actionを使ったPRの表示例](https://storage.googleapis.com/zenn-user-upload/6k87lepan1tw4l3azw3d9ceupift)](https://github.com/miya789/RubocopReviewTest/pull/5)
-_`rubocop-linter-action` を使った PR の表示例． Rubocop で違反箇所があると GitHub Actions が落ちます．_
+[![rubocop-linter-actionを使ったPRの表示例](https://storage.googleapis.com/zenn-user-upload/6k87lepan1tw4l3azw3d9ceupift)_`rubocop-linter-action` を使った PR の表示例． Rubocop で違反箇所があると GitHub Actions が落ちます．_](https://github.com/miya789/RubocopReviewTest/pull/5)
 
 そして PR の `Files changed` では変更したファイルに限定してアノテーションを表示してくれますが，
 **変更したファイルの変更箇所とは異なる部分であっても RuboCop の意に沿わない部分があると全て晒し上げられます**
