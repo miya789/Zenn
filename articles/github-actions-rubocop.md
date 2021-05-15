@@ -8,7 +8,7 @@ published: true
 
 # TL;DR
 
-- `reviewdog/action-rubocop` は PR の差分に対しての Rubocop 結果を PR 内でコメントしてくれるのでお薦め
+- `reviewdog/action-rubocop` は差分に対しての Rubocop 結果を Pull Request 内でコメントしてくれるのでお薦め
 - `on: push` でトリガーされた Actions は PR 内であっても認識しないので，これを動かす時は， `on: pull_request` 推奨 (それはそう)
 - 要は，以下の様に公式準拠にすれば問題無いです
 
