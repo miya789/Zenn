@@ -42,8 +42,9 @@ jobs:
 
 # GitHub Actions で動かす RuboCop
 
-取り敢えず以下の 2 つを見つけましたが，
-結論としては [`reviewdog/action-rubocop`](https://github.com/reviewdog/action-rubocop) の方が GitHub との親和性も高く便利に思われます
+少し調べると `bundle exec rubocop` を走らせてる記事が多く散見されますが， GitHub との連携も優れている方法を探してみます．
+そこで取り敢えず以下の 2 つを見つけましたが，
+結論としては [`reviewdog/action-rubocop`](https://github.com/reviewdog/action-rubocop) が GitHub との親和性も高く便利に思われます
 
 | ライブラリ                                                                                          | 差分に対しての Rubocop 適用 | PR 内でコメント        |
 | --------------------------------------------------------------------------------------------------- | --------------------------- | ---------------------- |
