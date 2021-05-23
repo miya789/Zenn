@@ -34,6 +34,21 @@ jobs:
           reporter: github-pr-review # Default is github-pr-check
 ```
 
+:::message alert
+因みにこのように便利な GitHub Actions ですが，意図しないコードを実行させられて **ソースコード** や **GitHub に登録した環境変数** が傍受される虞もあるらしいです[^github-actions-version][^mercari-codecov-incident]
+何も考えずにメジャーバージョンなどの指定を行うと危険かもしれないです
+(別の GitHub Actions に依存している場合はどうするんですかね……)
+
+ここで 2021 年現在で最新の事例を挙げておきます
+
+- [Bash Uploader Security Update - Codecov](https://about.codecov.io/security-update/)
+  - CI で Codecov を使っているユーザーに影響があったようです
+  - Codecov が出してる大抵の GitHub Actions はこれを使用していらしいので
+- [「Codecov」への第三者からの不正アクセスによる当社への影響および一部顧客情報等の流出について | 株式会社メルカリ](https://about.mercari.com/press/news/articles/20210521_incident_report/)
+  - 上の影響で起きた事例ですが，図が分かり易いので参考までに
+
+:::
+
 # 目的
 
 他の記事でも触れられている通り，冒頭の様に `reviewdog/action-rubocop` の公式ドキュメントに準拠する事に尽きます
@@ -227,3 +242,6 @@ jobs:
 [^watamote-russia]:
     [Watamotist さんは Twitter を使っています 「#わたモテ https://t.co/Fvm4jOIM3f
     チャンネル登録 785 万人のロシア系 YouTuber 系ラッパー #Morgenshtern の絶対にスマッシュヒットする新曲の MV にもこっち https://t.co/bpLNTxtr5I」 / Twitter](https://twitter.com/watamotist/status/1307668661939757056)
+
+[^github-actions-version]: [GitHub Actions の uses でメジャーバージョンを参照するのはリスク](https://zenn.dev/snowcait/articles/53ec922a414dde)
+[^mercari-codecov-incident]: [「Codecov」への第三者からの不正アクセスによる当社への影響および一部顧客情報等の流出について | 株式会社メルカリ](https://about.mercari.com/press/news/articles/20210521_incident_report/)
