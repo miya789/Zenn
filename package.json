@@ -6,6 +6,6 @@
   "author": "miya789 <miya.nori42395@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "zenn-cli": "^0.1.80"
+    "zenn-cli": "^0.1.112"
   }
 }
