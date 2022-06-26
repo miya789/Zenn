@@ -520,6 +520,63 @@ Vista のサポートは 2023 年より前に打ち切るとは伺えました�
 
 https://github.com/AvaloniaUI/Avalonia/issues/4427
 
+## 🤔GCM はどのように OAuth2 アプリケーションとして UI を表示して動作している?
+
+以下の様に、ホスト名で判別しています。
+なので、これに該当しないオンプレミス環境 GitLab は `generic` として認識され UI が表示されません。
+https://github.com/GitCredentialManager/git-credential-manager/blob/v2.0.779/src/shared/GitLab/GitLabConstants.cs#L48
+
+因みに、`OAuthClientId` や `OAuthClientSecret` もソースコードに埋め込まれており、
+他の設定値もここに記載されています。
+https://github.com/GitCredentialManager/git-credential-manager/blob/v2.0.779/src/shared/GitLab/GitLabConstants.cs#L7-L13
+
+## 🤔 オンプレミス環境の GitLab 対応はどうする?
+
+@[card](https://github.com/GitCredentialManager/git-credential-manager/blob/main/docs/gitlab.md)
+
+基本的には、上記リンクの指示に従います。
+一部抜粋して和訳したものを以下に記します。
+
+> ## 別インスタンスでの使い方
+>
+> 別インスタンスで使う為に、例えば `https://gitlab.example.com` では以下の設定が必要です。
+>
+> 1. [Create an OAuth application](https://docs.gitlab.com/ee/integration/oauth_provider.html). これは、ユーザーやグループ、インスタンスのレベルで行えます。
+>    まず、名前やリダイレクト先を `http://127.0.0.1/` で指定してください。
+>    そして、'Confidential' オプションは選択せず、'Expire access tokens' オプションは選択してください。
+>    最後に、'write_repository' や 'read_repository' のスコープを設定してください。
+> 1. application ID をコピーして、`git config --global credential.https://gitlab.example.com.GitLabDevClientId <APPLICATION_ID>` で設定してください。
+> 1. application secret をコピーして、`git config --global credential.https://gitlab.example.com.GitLabDevClientSecret <APPLICATION_SECRET>` で設定してください。
+> 1. `git config --global credential.https://gitlab.example.com.gitLabAuthModes browser` のように'browser'を含めて authentication modes を設定してください。
+> 1. 念の為に、`git config --global credential.https://gitlab.example.com.provider gitlab` を設定してください。これは、ドメインを GitLab インスタンスとして認識させるのに必要かもしれません。
+> 1. `git config --global --get-urlmatch credential https://gitlab.example.com` で、設定が期待通りかどうか確認してください。
+
+:::message
+今後のアップデートで自動対応する可能性もあります。
+:::
+
+## 🤔HTTPS 非対応のオンプレミス環境 GitLab でも使える?
+
+無理です。エラーメッセージがそう言ってました。
+
+```bash:HTTPSでないとGitLabとして処理できないとエラー
+$ GIT_TRACE=1 git clone http://gitlab.example.com/sample-user/private-repository.git
+22:28:30.042786 exec-cmd.c:237          trace: resolved executable dir: C:/Program Files/Git/mingw64/bin
+22:28:30.043790 git.c:459               trace: built-in: git clone http://gitlab.example.com/sample-user/private-repository.git
+Cloning into 'private-repository'...
+22:28:30.053785 run-command.c:654       trace: run_command: git remote-http origin http://gitlab.example.com/sample-user/private-repository.git
+22:28:30.060786 exec-cmd.c:237          trace: resolved executable dir: C:/Program Files/Git/mingw64/libexec/git-core
+22:28:30.061786 git.c:748               trace: exec: git-remote-http origin http://gitlab.example.com/sample-user/private-repository.git
+22:28:30.061786 run-command.c:654       trace: run_command: git-remote-http origin http://gitlab.example.com/sample-user/private-repository.git
+22:28:30.069786 exec-cmd.c:237          trace: resolved executable dir: C:/Program Files/Git/mingw64/libexec/git-core
+22:28:30.253464 run-command.c:654       trace: run_command: 'C:/Program\ Files/Git/mingw64/bin/git-credential-manager-core.exe get'
+fatal: Unencrypted HTTP is not supported for GitLab. Ensure the repository remote URL is using HTTPS.
+22:28:30.515517 run-command.c:654       trace: run_command: 'C:/Program Files/Git/mingw64/bin/git-askpass.exe' 'Username for '\''http://gitlab.example.com'\'': '
+error: unable to read askpass response from 'C:/Program Files/Git/mingw64/bin/git-askpass.exe'
+22:28:39.575230 run-command.c:654       trace: run_command: bash -c 'cat >/dev/tty && read -r line </dev/tty && echo "$line"'
+Username for 'http://gitlab.example.com':
+```
+
 # 補足
 
 https://twitter.com/akatsukioffici3/status/1530537511717482498?s=20&t=mMcJzi-SsGXbdeU6B4_IXw
