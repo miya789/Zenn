@@ -22,7 +22,8 @@ https://github.com/GitCredentialManager/git-credential-manager
 GitHub に於いては、 2 要素認証(2FA)を義務化する動き[^github-20220513]も活発です。
 そんな中、ネットワーク要件等の都合で、SSH ではなく HTTPS が推奨されている場合もあるのではないでしょうか? 実際、GitHub はより簡単な HTTPS を推奨しています[^github-set-up-git][^stackoverflow-11041729]。
 [^github-set-up-git]: https://docs.github.com/en/get-started/quickstart/set-up-git#connecting-over-https-recommended
-[^stackoverflow-11041729]: https://stackoverflow.com/questions/11041729/why-does-github-recommend-https-over-ssh/11041782
+
+[^stackoverflow-11041729]: [git - Why does GitHub recommend HTTPS over SSH? - Stack Overflow](https://stackoverflow.com/questions/11041729/why-does-github-recommend-https-over-ssh/11041782)
 [^github-20220513]: [開発者のアカウントを 2 要素認証(2FA)で保護 - GitHub ブログ](https://github.blog/jp/2022-05-13-software-security-starts-with-the-developer-securing-developer-accounts-with-2fa/)
 
 ですが、この HTTPS 接続の場合、パスワード認証が廃止され始めています。
@@ -63,7 +64,7 @@ fatal: Authentication failed for 'https://bitbucket.org/sample-user/private-repo
 そして慌てて「GitHub HTTPS clone できない」や「GitLab 2 要素認証 clone できない」等で検索し、検索結果に出て来た怪しい記事を鵜呑みにし、深く考えずにチェックを入れ、個人用のアクセストークンを発行していないでしょうか?
 きちんと**有効期限**や**スコープ**の 2 点を精査していますか?
 
-- スコープ
+- **スコープ**
   公式ドキュメントでは特に言及されていませんが、
   後述の GCM では `'write_repository'` と `'read_repository'` のみなので、
   全てのスコープは与えるのは止めた方が良いでしょう。
@@ -74,7 +75,7 @@ fatal: Authentication failed for 'https://bitbucket.org/sample-user/private-repo
   まぁ、保存方法とアクセス経路に対して、絶対の自信があるなら問題無いんですかね?
   :::
 
-- 有効期限
+- **有効期限**
   入力が面倒と言って、無期限で発行してしまっていませんか?
 
   とは言え、後述の GCM では期限を設定できないようです……
@@ -82,10 +83,10 @@ fatal: Authentication failed for 'https://bitbucket.org/sample-user/private-repo
 
   :::details 各種サービスのアクセストークン有効期限
   GitHub だとデフォルトが 30 日間ですが、GitLab だと無期限なので、そのまま使ってしまう人もいるかもしれません。
-  そこで最大の有効期限が重要です。
+  そこで**最大の有効期限**が重要です。
 
   GitHub なら 1 年間使用されなかったアクセストークンは無効化されるようです[^github-authentication-keeping]。
-  [^github-authentication-keeping]: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/token-expiration-and-revocation
+  [^github-authentication-keeping]: [Token expiration and revocation - GitHub Docs](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/token-expiration-and-revocation)
 
   しかし、GitLab では Ultimate コースでないと最大の有効期限は設定できません[^gitlab-limit-the-lifetime-of-access-tokens]。
   [^gitlab-limit-the-lifetime-of-access-tokens]: https://docs.gitlab.com/ee/user/admin_area/settings/account_and_limit_settings.html#limit-the-lifetime-of-access-tokens
@@ -103,7 +104,7 @@ fatal: Authentication failed for 'https://bitbucket.org/sample-user/private-repo
 
 :::message
 但し、GitHub の PAT 作成ページ[^github-authentication]では、更に後述の GCM が推奨されています[^github-caching]。
-[^github-authentication]: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
+[^github-authentication]: [Creating a personal access token - GitHub Docs](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
 [^github-caching]: https://docs.github.com/en/get-started/getting-started-with-git/caching-your-github-credentials-in-git#git-credential-manager
 :::
 
@@ -111,30 +112,28 @@ fatal: Authentication failed for 'https://bitbucket.org/sample-user/private-repo
 
 # アクセストークンの管理方法
 
-## 概要
-
 主に以下があります。
 
-| helper 名                  | 関連リポジトリ                                                                                               | 補足                                                         |
-| -------------------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------ |
-| `store`                    | [Git for Windows](https://github.com/git-for-windows/git) / [Git](https://github.com/git/git/)<br>(built-in) | 平文保存[^git-tools-credential-storage]                      |
-| `cache`                    | [Git for Windows](https://github.com/git-for-windows/git) / [Git](https://github.com/git/git/)<br>(built-in) | メモリに保存 <br> Unix socket を使用するが、Windows が非対応 |
-| `wincred` / `osxkeychain ` | [Git for Windows](https://github.com/git-for-windows/git) / [Git](https://github.com/git/git/)<br>(built-in) | Windows の場合: <br> 「資格情報マネージャー」を直接操作可能  |
-| `manager`                  | [Git Credential Manager for Windows](https://github.com/microsoft/Git-Credential-Manager-for-Windows)        | アーカイブ済み<br> Mac や Linux 用のものも同様               |
-| `manager-core`             | [Git Credential Manager (GCM)](https://github.com/GitCredentialManager/git-credential-manager)               | helper 名には core が残っているが、名称からは削除済み        |
+| helper 名                 | 関連リポジトリ                                                                                               | 補足                                                         |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------ |
+| `store`                   | [Git for Windows](https://github.com/git-for-windows/git) / [Git](https://github.com/git/git/)<br>(built-in) | 平文保存[^git-tools-credential-storage]                      |
+| `cache`                   | [Git for Windows](https://github.com/git-for-windows/git) / [Git](https://github.com/git/git/)<br>(built-in) | メモリに保存 <br> Unix socket を使用するが、Windows が非対応 |
+| `wincred` / `osxkeychain` | [Git for Windows](https://github.com/git-for-windows/git) / [Git](https://github.com/git/git/)<br>(built-in) | Windows の場合: <br> 「資格情報マネージャー」を直接操作可能  |
+| `manager`                 | [Git Credential Manager for Windows](https://github.com/microsoft/Git-Credential-Manager-for-Windows)        | アーカイブ済み<br> Mac や Linux 用のものも同様               |
+| `manager-core`            | [Git Credential Manager (GCM)](https://github.com/GitCredentialManager/git-credential-manager)               | helper 名には core が残っているが、名称からは削除済み        |
 
 [^git-tools-credential-storage]: [Git - 認証情報の保存](https://git-scm.com/book/ja/v2/Git-%E3%81%AE%E3%81%95%E3%81%BE%E3%81%96%E3%81%BE%E3%81%AA%E3%83%84%E3%83%BC%E3%83%AB-%E8%AA%8D%E8%A8%BC%E6%83%85%E5%A0%B1%E3%81%AE%E4%BF%9D%E5%AD%98)
 
 ::::details helper 名とは?🤔
-以下の設定で使うことになる名前です。
+以下の設定で使う事になる名前です。
 
 ```bash:configの例(.gitconfig等)
-git config --global credential.helper xxx
+git config --global credential.helper ${helper 名}
 ```
 
 :::message
 因みに、ここで設定したものが、
-`git pull`等を実行した際に`git credential-xxx get`の形式で呼ばれ、認証情報が使われます。
+`git pull`等を実行した際に`git credential-${helper 名} get`の形式で呼ばれ、認証情報が使われます。
 
 ```bash:初回
 $ GIT_TRACE=1 git clone https://github.com/sample-user/private-repository.git
@@ -149,8 +148,8 @@ info: please complete authentication in your browser...
 remote: Enumerating objects: 300, done.
 remote: Counting objects: 100% (191/191), done.
 remote: Compressing objects: 100% (122/122), done.
-14:44:15.025907 run-command.c:663       trace: run_command: git index-pack --stdin -v --fix-thin '--keep=fetch-pack 357 on DESKTOP-RATEM3C' --check-self-contained-and-connected --pack_header=2,300
-14:44:15.029642 git.c:439               trace: built-in: git index-pack --stdin -v --fix-thin '--keep=fetch-pack 357 on DESKTOP-RATEM3C' --check-self-contained-and-connected --pack_header=2,300
+14:44:15.025907 run-command.c:663       trace: run_command: git index-pack --stdin -v --fix-thin '--keep=fetch-pack 357 on XXXXX' --check-self-contained-and-connected --pack_header=2,300
+14:44:15.029642 git.c:439               trace: built-in: git index-pack --stdin -v --fix-thin '--keep=fetch-pack 357 on XXXXX' --check-self-contained-and-connected --pack_header=2,300
 remote: Total 300 (delta 112), reused 145 (delta 69), pack-reused 109
 Receiving objects: 100% (300/300), 97.78 KiB | 1.96 MiB/s, done.
 Resolving deltas: 100% (176/176), done.
@@ -170,8 +169,8 @@ Cloning into 'private-repository'...
 remote: Enumerating objects: 300, done.
 remote: Counting objects: 100% (191/191), done.
 remote: Compressing objects: 100% (122/122), done.
-20:25:07.075604 run-command.c:663       trace: run_command: git index-pack --stdin -v --fix-thin '--keep=fetch-pack 785 on DESKTOP-RATEM3C' --check-self-contained-and-connected --pack_header=2,300
-20:25:07.101286 git.c:439               trace: built-in: git index-pack --stdin -v --fix-thin '--keep=fetch-pack 785 on DESKTOP-RATEM3C' --check-self-contained-and-connected --pack_header=2,300
+20:25:07.075604 run-command.c:663       trace: run_command: git index-pack --stdin -v --fix-thin '--keep=fetch-pack 785 on XXXXX' --check-self-contained-and-connected --pack_header=2,300
+20:25:07.101286 git.c:439               trace: built-in: git index-pack --stdin -v --fix-thin '--keep=fetch-pack 785 on XXXXX' --check-self-contained-and-connected --pack_header=2,300
 remote: Total 300 (delta 112), reused 145 (delta 69), pack-reused 109
 Receiving objects: 100% (300/300), 97.78 KiB | 4.07 MiB/s, done.
 Resolving deltas: 100% (176/176), done.
@@ -188,53 +187,58 @@ https://git-scm.com/book/ja/v2/Git-%E3%81%AE%E3%81%95%E3%81%BE%E3%81%96%E3%81%BE
 更に Windows / Mac だと `wincred` / `osxkeychain` も利用可能です[^git-tools-credential-storage]。
 では上から順に見てみましょう。
 
-### `store`
+- `store`
+  平文で保存します。
+  デフォルトの保存先は、`~/.git-credentials`です。
 
-平文で保存します。
-デフォルトの保存先は、`~/.git-credentials`です。
+- `cache`
 
-### `cache`
+  > cache ヘルパーは独自形式でメモリーに情報を保持します
+  > （他のプロセスはこの情報にアクセスできません）[^git-tools-credential-storage]。
 
-> cache ヘルパーは独自形式でメモリーに情報を保持します
-> （他のプロセスはこの情報にアクセスできません）[^git-tools-credential-storage]。
+  このように紹介されており、安全らしいです。
 
-このように紹介されており、安全らしいです。
+  :::message
+  `strace` でソケット?は覗けるらしいですが、自分は解読方法が分からないです……
+  独自形式で保持して、Git のプロセス以外に共有されていないから安全なんですかね?
+  :::
 
-:::message
-独自形式で保持して、Git のプロセス以外に共有されていないから安全なんですかね?
-`strace`でソケットファイルの通信は覗けるらしいですが、自分は読み方が分からないです……
-:::
+- `manager`
 
-### `manager`
+  古い記事だとこれの事しか書いてないですが、
+  既に `manager-core` に統合され、リポジトリはアーカイブ済みです。
+  Mac や Linux 用のものも同様です。
+  :::message alert
+  `manager` はアーカイブ済みであり、公式に `manager-core` で代替するようにアナウンスされているので、これを使いましょう。
+  (Windows の場合は、Git を入れるだけで済みますが)
+  名前が紛らわしく、未だに `manager` を推奨しているネット記事が残っていますが、
+  **`manager-core`の正式名**は、[**Git Credential Manager (GCM)**](https://github.com/GitCredentialManager/git-credential-manager)なので注意しましょう。
+  :::
 
-古い記事だとこれの事しか書いてないですが、既に `manager-core` に統合され、リポジトリはアーカイブ済みです。
-Mac や Linux 用のものも同様です。
+- `magaer-core`
 
-### `magaer-core`
+  初めてアクセスする Git ホスティングサービス(GitHub 等)に対して、
+  `git pull` / `git push` 等を行うと、
+  以下の様な UI が表示され、これに従ってブラウザ経由で認証できます。
+  ![GCMによって表示される認証用のUI](/images/manager-core-for-two-factor-authentication/gcm-ui.png)
+  _GCM によって表示される認証用の UI[^github-20220407]_
 
-`git pull`等により UI が表示され、これによってブラウザ経由で認証できます。
-![GCMによって表示される認証用のUI](/images/manager-core-for-two-factor-authentication/gcm-ui-github.png)
-_GCM によって表示される認証用の UI_
+  尚、一度 GCM によるアクセスを認可したサービスでは、今後アクセストークンを要求される事はありません。
+  [^github-20220407]: [Git Credential Manager: authentication for everyone | The GitHub Blog](https://github.blog/2022-04-07-git-credential-manager-authentication-for-everyone/)
 
-[Git for Windows](https://github.com/git-for-windows/git)をインストールした場合は、以下の画像の様にデフォルトで設定できます。
-![Git for Windows インストール時に `credential helper` を選ぶ画面](/images/manager-core-for-two-factor-authentication/install-gcm-windows.png)
-_Git for Windows インストール時に `credential helper` を選ぶ画面_
+  :::message
+  アクセストークンの保存先に関して、
+  Windows の場合は「資格情報マネージャー」なので、削除したい場合はここから操作可能です。
+  :::
 
-:::message alert
-前述の通り、`manager` はアーカイブ済みであり、公式に `manager-core` で代替するようにアナウンスされているので、これを使いましょう。
-(Windows の場合は、git を入れるだけで済みますが)
-名前が紛らわしく、ネットの記事では未だに `manager` を推奨しているものが散見されますが、
-**`manager-core`の正式名**は、[**Git Credential Manager (GCM)**](https://github.com/GitCredentialManager/git-credential-manager)なので注意しましょう。
-:::
+  ::: message
+  各種の Git ホスティングサービス内の設定で GCM を無効化すると、
+  再び認可が必要になりますので、UI も再び表示されます。
+  :::
 
-## まとめ
-
-:::message
-Windows の場合、アクセストークンは「資格情報マネージャー」に保存されます。
-削除したい場合は、ここから可能です。
-:::
-
-ではここで、最近出て来た GCM に焦点を移してみましょう。
+**アクセストークン管理**の選択肢を簡単に確認してきましたが。いかがでしたでしょうか?
+**アクセストークン発行**も容易になる点では、GCM に軍配が上がりそうです。
+ではここで、最近推奨され始めている**GCM**に焦点を移してみましょう。
 
 # Git Credential Manager (GCM)
 
