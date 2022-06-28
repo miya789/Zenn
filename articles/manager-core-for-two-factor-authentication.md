@@ -33,7 +33,7 @@ GitHub に於いては、 2 要素認証(2FA)を義務化する動き[^github-20
 [^github-20201215]: [Token authentication requirements for Git operations | The GitHub Blog](https://github.blog/2020-12-15-token-authentication-requirements-for-git-operations/)
 [^bitbucket-20220217]: [Announcement: Bitbucket Cloud account password usa... - Atlassian Community](https://community.atlassian.com/t5/Bitbucket-articles/Announcement-Bitbucket-Cloud-account-password-usage-for-Git-over/ba-p/1948231)
 
-ですが、`git clone` 等で以下の画面が出てきて初めて、以前使っていたパスワード認証が使えなくなった事に気づき、焦った方もいるのではないでしょうか?
+ですが、`git clone`等で以下の画面が出てきて初めて、以前使っていたパスワード認証が使えなくなった事に気づき、焦った方もいるのではないでしょうか?
 
 ```bash:HTTP越しにパスワード認証でエラーが出る例(GitHub)
 $ git clone https://github.com/sample-user/private-repository.git
@@ -66,7 +66,7 @@ fatal: Authentication failed for 'https://bitbucket.org/sample-user/private-repo
 
 - **スコープ**
   公式ドキュメントでは特に言及されていませんが、
-  後述の GCM では `'write_repository'` と `'read_repository'` のみなので、
+  後述の GCM では`'write_repository'`と`'read_repository'`のみなので、
   全てのスコープは与えるのは止めた方が良いでしょう。
   API 用途ならまだしも、`git pull`や`git push`には不要だと思います。
 
@@ -104,6 +104,8 @@ fatal: Authentication failed for 'https://bitbucket.org/sample-user/private-repo
 
 :::message
 但し、GitHub の PAT 作成ページ[^github-authentication]では、更に後述の GCM が推奨されています[^github-caching]。
+恐らくこれは、個人用アクセストークンではなく、OAuth アクセストークンですが、
+GitHub のみ仕様が異なるようです。
 [^github-authentication]: [Creating a personal access token - GitHub Docs](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
 [^github-caching]: https://docs.github.com/en/get-started/getting-started-with-git/caching-your-github-credentials-in-git#git-credential-manager
 :::
@@ -114,17 +116,17 @@ fatal: Authentication failed for 'https://bitbucket.org/sample-user/private-repo
 
 主に以下があります。
 
-| helper 名                 | 関連リポジトリ                                                                                               | 補足                                                         |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------ |
-| `store`                   | [Git for Windows](https://github.com/git-for-windows/git) / [Git](https://github.com/git/git/)<br>(built-in) | 平文保存[^git-tools-credential-storage]                      |
-| `cache`                   | [Git for Windows](https://github.com/git-for-windows/git) / [Git](https://github.com/git/git/)<br>(built-in) | メモリに保存 <br> Unix socket を使用するが、Windows が非対応 |
-| `wincred` / `osxkeychain` | [Git for Windows](https://github.com/git-for-windows/git) / [Git](https://github.com/git/git/)<br>(built-in) | Windows の場合: <br> 「資格情報マネージャー」を直接操作可能  |
-| `manager`                 | [Git Credential Manager for Windows](https://github.com/microsoft/Git-Credential-Manager-for-Windows)        | アーカイブ済み<br> Mac や Linux 用のものも同様               |
-| `manager-core`            | [Git Credential Manager (GCM)](https://github.com/GitCredentialManager/git-credential-manager)               | helper 名には core が残っているが、名称からは削除済み        |
+| helper 名                   | 関連リポジトリ                                                                                           | 保存先                                  |
+| --------------------------- | -------------------------------------------------------------------------------------------------------- | --------------------------------------- |
+| `store`                     | [Git for Windows](https://github.com/git-for-windows/git) / [Git](https://github.com/git/git/)(built-in) | テキストファイル                        |
+| `cache`                     | [Git for Windows](https://github.com/git-for-windows/git) / [Git](https://github.com/git/git/)(built-in) | ソケットファイル                        |
+| `wincred`/<br>`osxkeychain` | [Git for Windows](https://github.com/git-for-windows/git) / [Git](https://github.com/git/git/)(built-in) | 認証情報マネージャー /<br> キーチェーン |
+| `manager`                   | [Git Credential Manager for Windows](https://github.com/microsoft/Git-Credential-Manager-for-Windows)    | 認証情報マネージャー                    |
+| `manager-core`              | [Git Credential Manager (GCM)](https://github.com/GitCredentialManager/git-credential-manager)           | 認証情報マネージャー 等                 |
 
 [^git-tools-credential-storage]: [Git - 認証情報の保存](https://git-scm.com/book/ja/v2/Git-%E3%81%AE%E3%81%95%E3%81%BE%E3%81%96%E3%81%BE%E3%81%AA%E3%83%84%E3%83%BC%E3%83%AB-%E8%AA%8D%E8%A8%BC%E6%83%85%E5%A0%B1%E3%81%AE%E4%BF%9D%E5%AD%98)
 
-::::details helper 名とは?🤔
+::::details 🤔helper 名とは?
 以下の設定で使う事になる名前です。
 
 ```bash:configの例(.gitconfig等)
@@ -183,61 +185,103 @@ https://git-scm.com/book/ja/v2/Git-%E3%81%AE%E3%81%95%E3%81%BE%E3%81%96%E3%81%BE
 :::
 ::::
 
-まず、Git をインストールすると、built-in で入っているのが、`store`, `cache` で、
-更に Windows / Mac だと `wincred` / `osxkeychain` も利用可能です[^git-tools-credential-storage]。
+:::details 🤔 資格情報マネージャー(Credential Manager) とは?
+
+Windows の場合、以下の様なものがあります。
+ここに各種の認証情報を保管できるようですが、暗号化の有無などは把握できておりません。
+![資格情報マネージャー](/images/manager-core-for-two-factor-authentication/credential-manager.png)
+_資格情報マネージャー[^credential-manager]_
+
+因みに macOS に於ける似たものとして "キーチェーンアクセス" というものがあるらしいです。
+
+[^credential-manager]: [資格情報マネージャーにアクセスする (microsoft.com)](https://support.microsoft.com/ja-jp/windows/%E8%B3%87%E6%A0%BC%E6%83%85%E5%A0%B1%E3%83%9E%E3%83%8D%E3%83%BC%E3%82%B8%E3%83%A3%E3%83%BC%E3%81%AB%E3%82%A2%E3%82%AF%E3%82%BB%E3%82%B9%E3%81%99%E3%82%8B-1b5c916a-6a16-889f-8581-fc16e8165ac0)
+
+:::
+
+まず、Git をインストールすると、built-in で入っているのが、`store`,`cache`で、
+Windows / Mac だと`wincred`/`osxkeychain`も利用可能です[^git-tools-credential-storage]。
+更に、`manager-core`というものも最近推奨され始めています。
 では上から順に見てみましょう。
 
 - `store`
-  平文で保存します。
+  テキストファイルに平文で保存します。
   デフォルトの保存先は、`~/.git-credentials`です。
+  :::message alert
+  平文保存なので基本的に推奨されません。
+  :::
 
 - `cache`
 
   > cache ヘルパーは独自形式でメモリーに情報を保持します
   > （他のプロセスはこの情報にアクセスできません）[^git-tools-credential-storage]。
 
-  このように紹介されており、安全らしいです。
+  このように紹介されており、前述の`store`より安全らしいです。
 
   :::message
-  `strace` でソケット?は覗けるらしいですが、自分は解読方法が分からないです……
+  `strace`でソケット?は覗けるらしいですが、自分は解読方法が分からないです……
   独自形式で保持して、Git のプロセス以外に共有されていないから安全なんですかね?
   :::
+
+  :::message alert
+  Windows は、Unix Socket を公式にサポートしていないので、現在は非対応です。
+  参考: [🤔Q-06. "`credential-cache`on Windows"は可能か?](#🤔q-06.-"credential-cacheon-windows"は可能か%3F)
+  :::
+
+- `wincred`/`osxkeychain`
+  前述の 2 つと同じで、Git インストール時にデフォルトで有効です。
+  対話形式で入力したアクセストークンが、システムの認証情報マネージャーへ保存され、
+  以降はそれを永続的に使います。
+
+  ::::details コマンドで削除する場合
+  Windows であれば「認証情報マネージャー」の情報を直接操作可能ですが、
+  `wincred`の helper を使えば、コマンドで済ます事も可能です。
+
+  ```bash:認証情報マネージャーから認証情報を削除するコマンド
+  git credential-cache erase <<EOS
+  protocol=https
+  host=${対象のGitホスティングサービスのホスト名}
+  EOS
+  ```
+
+  ::::
 
 - `manager`
 
   古い記事だとこれの事しか書いてないですが、
-  既に `manager-core` に統合され、リポジトリはアーカイブ済みです。
+  既に`manager-core`に統合され、リポジトリはアーカイブ済みです。
   Mac や Linux 用のものも同様です。
   :::message alert
-  `manager` はアーカイブ済みであり、公式に `manager-core` で代替するようにアナウンスされているので、これを使いましょう。
+  `manager`はアーカイブ済みであり、公式に`manager-core`で代替するようにアナウンスされているので、これを使いましょう。
   (Windows の場合は、Git を入れるだけで済みますが)
-  名前が紛らわしく、未だに `manager` を推奨しているネット記事が残っていますが、
+  名前が紛らわしく、未だに`manager`を推奨しているネット記事が残っていますが、
   **`manager-core`の正式名**は、[**Git Credential Manager (GCM)**](https://github.com/GitCredentialManager/git-credential-manager)なので注意しましょう。
   :::
 
 - `magaer-core`
+  後述する最新の GitHub ドキュメントで推奨されています。
+  正式名は "Git Credential Manager (GCM)" です。
+  :::message
+  helper 名に "core" という部分が残っていますが、
+  以前の正式名が "Git Credential Manager Core" だった頃の名残です[^github-20220407]。
+  :::
 
   初めてアクセスする Git ホスティングサービス(GitHub 等)に対して、
-  `git pull` / `git push` 等を行うと、
+  `git pull`/`git push`等を行うと、
   以下の様な UI が表示され、これに従ってブラウザ経由で認証できます。
   ![GCMによって表示される認証用のUI](/images/manager-core-for-two-factor-authentication/gcm-ui.png)
   _GCM によって表示される認証用の UI[^github-20220407]_
 
-  尚、一度 GCM によるアクセスを認可したサービスでは、今後アクセストークンを要求される事はありません。
+  尚、一度 GCM によるアクセスを認可したサービスでは、
+  今後アクセストークンを要求される事はありません。
   [^github-20220407]: [Git Credential Manager: authentication for everyone | The GitHub Blog](https://github.blog/2022-04-07-git-credential-manager-authentication-for-everyone/)
 
-  :::message
-  アクセストークンの保存先に関して、
-  Windows の場合は「資格情報マネージャー」なので、削除したい場合はここから操作可能です。
-  :::
-
   ::: message
-  各種の Git ホスティングサービス内の設定で GCM を無効化すると、
-  再び認可が必要になりますので、UI も再び表示されます。
+  各種の Git ホスティングサービス内の設定で GCM を無効化すれば、
+  再びアクセストークン発行が必要になりますので、UI も再び表示されます。
   :::
 
 **アクセストークン管理**の選択肢を簡単に確認してきましたが。いかがでしたでしょうか?
-**アクセストークン発行**も容易になる点では、GCM に軍配が上がりそうです。
+**アクセストークン発行**も容易になる点で、OAuth アプリケーションの GCM が有力です。
 ではここで、最近推奨され始めている**GCM**に焦点を移してみましょう。
 
 # Git Credential Manager (GCM)
