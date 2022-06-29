@@ -625,6 +625,10 @@ Vista のサポートは 2023 年より前に打ち切るとは伺えました�
 
 従って、どうしても使いたい場合は、Git や GCM をビルドして使いましょう。
 
+:::message
+ビルド方法を自分も試してみたのですが、連携が難しくできていないです。
+:::
+
 ## 🤔Q-07. Linux 環境で GCM の UI が表示されないが?
 
 「Avalonia により.NET でも Linux 対応」とあるにも拘わらず、UI が出て来なくて焦る場合もあると思います。
@@ -687,6 +691,13 @@ error: unable to read askpass response from 'C:/Program Files/Git/mingw64/bin/gi
 22:28:39.575230 run-command.c:654       trace: run_command: bash -c 'cat >/dev/tty && read -r line </dev/tty && echo "$line"'
 Username for 'http://gitlab.example.com':
 ```
+
+## 🤔Q-11. `pass` コマンドが連携できるなら、1Password を保存先として連携できる?
+
+:::message
+余力や要望があれな、以下などを参考に調査します。
+https://dev.classmethod.jp/articles/create_git_credential_helper_with_1password/
+:::
 
 # 補足
 
