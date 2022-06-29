@@ -284,11 +284,11 @@ Windows / Mac だと`wincred`/`osxkeychain`も利用可能です[^git-tools-cred
 **アクセストークン発行**も容易になる点で、OAuth アプリケーションの GCM が有力です。
 ではここで、最近推奨され始めている**GCM**に焦点を移してみましょう。
 
-# Git Credential Manager (GCM)
+# [Git Credential Manager (GCM)](https://github.com/GitCredentialManager/git-credential-manager)
 
 https://github.blog/2022-04-07-git-credential-manager-authentication-for-everyone/
-2022/04/07 に GitHub から公式にアナウンスされたばかりのものです。
-ポイントとしては、以下です。
+2022/04/07 に GitHub から公式にアナウンスされ、広く推奨されるようになったばかりです。
+この発表に於けるポイントとしては、以下です。
 
 - 以前までの [GCM for Windows](https://github.com/microsoft/git-credential-manager-for-windows) and [GCM for Mac and Linux](https://github.com/microsoft/git-credential-manager-for-mac-and-linux) を統合
   - [Avalonia UI](https://avaloniaui.net/)により、.NET でも macOS や Linux に対応
@@ -298,36 +298,86 @@ https://github.blog/2022-04-07-git-credential-manager-authentication-for-everyon
 - Web UI の指示に従って認可すると、
   裏でアクセストークンが発行され、更にローカルへ良い感じで保存してくれる
 - GitLab も対応
-  - オンプレミス環境の場合は別途設定が必要[^gcm-gitlab]
-- 認証情報に関して、様々な保存方法を設定可能(GPG 暗号化ファイル、キャッシュ)
+  - オンプレミス環境の場合は別途設定が必要[^gcm-gitlab]だが、改善予定あり
+- 認証情報に関して、様々な保存方法を設定可能
+  - デフォルトの認証情報マネージャー、GPG 暗号化ファイル、キャッシュ等
 
-:::message  
+:::message alert
 Azure Devops 関連はちょっと知らないです…
+Windows のセキュリティに詳しい方は、上記リンク先によく目を通される事を推奨します。
 :::
 
 [^gcm-gitlab]: https://github.com/GitCredentialManager/git-credential-manager/blob/main/docs/gitlab.md
 
-では機能について確認してみましょう。
+:::details 🤔 仕組みは?
+https://github.com/GitCredentialManager/git-credential-manager/blob/main/docs/architecture.md
+:::
 
-## UI からブラウザ経由で OAuth アクセストークンを発行
+では、使い方について確認してみましょう。
+主に以下です。
 
-まず、Windows の場合は、Git をインストールする際にインストールされます。
-macOS や Linux の場合は別途ダウンロードして、公式の手順[^gcm]に従ってインストールしてください。
+1. [GCM のインストール](#gcm-のインストール)
+1. [Git ホスティングサービスの新規登録](#git-ホスティングサービスの新規登録)
+
+## GCM のインストール
+
+基本は公式リポジトリ[^gcm]の指示に従います。
+以下には、あくまで 2022/07/01 現在の方法を一部紹介します。
 [^gcm]: https://github.com/GitCredentialManager/git-credential-manager
 
-あとは `git pull` / `git push` を実行する度に以下の UI が表示されて使えるようになります。
-![GCMによって表示される認証用のUI](/images/manager-core-for-two-factor-authentication/gcm-ui-github.png)
-_GCM によって表示される認証用の UI_
+### Windows
+
+[Git for Windows](https://github.com/git-for-windows/git)をインストールする場合は、以下の画像の様にデフォルトで設定できます。
+![Git for Windows インストール時に`credential helper`を選ぶ画面](/images/manager-core-for-two-factor-authentication/install-gcm-windows.png)
+_Git for Windows インストール時に`credential helper`を選ぶ画面_
+
+尚、別でインストールしたい場合は、
+公式ページからダウンロードしてインストールしてください。
+
+:::message
+WSL では、以下 2 つの選択肢があります。
+認証情報を Windows 側と共有できる点で、前者をお勧めします。
+
+1. Windows 側の GCM を読み込む
+1. WSL 内に新たにインストール
+
+参考: [(中級者向け) WSL から Windows と資格情報の共有](<#(中級者向け)-wsl-から-windows-と資格情報の共有>)
+
+:::
+
+### その他
+
+詳細に、アンインストール方法も書いてあるので、
+公式リポジトリ[^gcm]を参照してください。
+
+:::message alert
+`LANG=en_US.UTF-8` でないと UI 表示でエラーが出るので注意しましょう。
+参考: [🤔Q-07. Linux 環境で GCM の UI が表示されないが?](#🤔q-07-linux-環境で-gcm-の-ui-が表示されないが)
+:::
+
+## Git ホスティングサービスの新規登録
+
+あとは`git pull`/`git push`を実行する度に以下の UI が表示されて使えるようになります。
+これに従って、Web ブラウザでログインして認可すれば、
+以降は GCM がアクセストークンの**更新**・**管理**を行ってくれます。
+![GCMによって表示される認証用のUI](/images/manager-core-for-two-factor-authentication/gcm-ui.png)
+_GCM によって表示される認証用の UI[^github-20220407]_
+
+:::message
+ここで発行するアクセストークンは OAuth のものです。
+GitHub は仕様が異なるようですが、https://github.com/settings/applications の"Authorized OAuth Apps"から確認できるので OAuth と思われます。
+参考: [🤔Q-02. GCM のアクセストークンは OAuth として発行されている?](#🤔q-02.-gcm-のアクセストークンは-oauth-として発行されている%3F)
+:::
 
 ::::message
 因みに、ここでアクセストークンを発行して保存すると、
 その後は**自分で無効化しない限り**認証不要になります。
 
 GitLab の場合、実際はアクセストークン自体変わっているのですが、裏で一緒に保存されたリフレッシュトークンがアクセストークンを更新してくれています。
-:::details 🤔 アクセストークンの中身は?
-オンプレミス版 GitLab の場合は以下のように確認可能です。
+:::details 🤔 アクセストークンの中身は? (オンプレミス環境 GitLab)
+オンプレミス環境 GitLab の場合は以下のように確認可能です。
 
-```bash:オンプレミス版 GitLab のデータベースにアクセスしてOAuth2アクセストークンを確認する手順
+```bash:オンプレミス環境 GitLab のデータベースにアクセスしてOAuth2アクセストークンを確認する手順
 sudo gitlab-rails dbconsole --database main
 gitlabhq_production=> select * from oauth_access_tokens;
  id | resource_owner_id | application_id |                              token                               |                          refresh_token                           | expires_in | revoked_at |  created_at                |  scopes
@@ -343,36 +393,59 @@ gitlabhq_production=> select * from oauth_access_tokens;
 ここで説明するには難しいので、調べてください。
 因みに、OAuth と OAuth2.0、更に OpenID Connect というのがあるらしいです。
 
-一般的に、**利用者が自ら無効化しない限り** リフレッシュトークンは有効らしいです。
+一般的に、**利用者が自ら無効化しない限り**リフレッシュトークンは有効らしいです。
 Google の場合はログインしてないと切れるらしいですね。
 https://www.cdatablog.jp/entry/gcprefreshtokengrant
 
 :::details 🤔GitLab ではどう実装されている?
-GitLab の場合は、個人アクセストークンではなく、自動でアクセストークン更新可能な OAuth2 のアクセストークンを使います。
-内部の実装には Doorkeeper を使ってますが、リフレッシュトークンの有効期限が無いようです[^doorkeeper-refresh-expiration]。
+GitLab の場合は個人アクセストークンではなく、
+自動でアクセストークンを更新可能な OAuth2 のアクセストークンを使います。
+内部では Doorkeeper を使ってますが、リフレッシュトークンの有効期限が無いようです[^doorkeeper-refresh-expiration]。
 [^doorkeeper-refresh-expiration]: https://github.com/doorkeeper-gem/doorkeeper/wiki/Customizing-Token-Expiration#refresh-token
 
-最近になって必要では?とのコメントがあり、👍 はありますが進展が無いですね。
-https://github.com/doorkeeper-gem/doorkeeper/issues/360
+最近になって Closed の Issue[^doorkeeper-issue-360]で、有効期限が必要では?とのコメントがあり 👍 もありますが進展が無いですね。
+正直、仕様が分からないのでどうしようも無いですね……🥶
+[^doorkeeper-issue-360]: https://github.com/doorkeeper-gem/doorkeeper/issues/360
 :::
 ::::
 
-## 様々な管理方法のオプション
+## (中級者向け) WSL から Windows と資格情報の共有
 
-@[card](https://github.com/GitCredentialManager/git-credential-manager/blob/main/docs/credstores.md)
+WSL 内に直接 GCM をインストールすると、Windows の資格情報にアクセスできません。
+従って資格情報を共有したい場合は、
+WSL 内の設定として Windows 側の GCM の実行パスを設定しましょう。[^gcm-wsl]
+[^gcm-wsl]: https://github.com/GitCredentialManager/git-credential-manager/blob/main/docs/wsl.md
+
+```bash
+git config --global credential.helper "/mnt/c/Program\ Files/Git/mingw64/bin/git-credential-manager-core.exe"
+# If you intend to use Azure DevOps you must also set the following Git configuration inside of your WSL installation.
+git config --global credential.https://dev.azure.com.useHttpPath true
+```
+
+## (上級者向け) 様々な管理方法のオプション
+
+> GCM makes use of the Windows Credential Manager on Windows and the login keychain on macOS.
+> ![GCMによって表示される認証用のUI](/images/manager-core-for-two-factor-authentication/gcm-store.png)
+> In addition to these existing mechanisms, we also support several alternatives across supported platforms, giving you the choice of how and where you wish to store your generated credentials (such as GPG-encrypted credential files). [^github-20220407]
+
+公式アナウンスで紹介されている通り、
+前項まで使う事はできますが、更に上級者向けの設定を紹介します。
+
 [アクセストークンの管理方法](#アクセストークンの管理方法)で触れたように様々な helper が存在しますが、
-`manager-core`はこれらを組み合わせることも可能です。
-一覧は以下ですが、詳細はリンク先から確認してください。
+`manager-core`はこれらを組み合わせる事も可能です。
+一覧は以下ですが、詳細は公式のドキュメント[^gcm-credstores]先から確認してください。
 
-| 設定名          | 説明                                                                                         | Windows | Mac | Linux |
-| --------------- | -------------------------------------------------------------------------------------------- | ------- | --- | ----- |
-| `wincredman`    | Windows Credential Manager                                                                   | ✅      |     |       |
-| `dpapi`         | DPAPI protected files                                                                        | ✅      |     |       |
-| `keychain`      | macOS Keychain                                                                               |         | ✅  |       |
-| `secretservice` | [freedesktop.org Secret Service API](https://specifications.freedesktop.org/secret-service/) |         |     | ✅    |
-| `gpg`           | GPG/[`pass`](https://www.passwordstore.org/) compatible files                                |         | ✅  | ✅    |
-| `cache`         | Git's built-in [credential cache](https://git-scm.com/docs/git-credential-cache)             |         | ✅  | ✅    |
-| `plaintext`     | Plaintext files                                                                              | ✅      | ✅  | ✅    |
+[^gcm-credstores]: https://github.com/GitCredentialManager/git-credential-manager/blob/main/docs/credstores.md
+
+| 設定名(`credentialStore`) | 名称                                                                                         | Windows | Mac | Linux |
+| ------------------------- | -------------------------------------------------------------------------------------------- | ------- | --- | ----- |
+| `wincredman`              | Windows Credential Manager                                                                   | ✅      |     |       |
+| `dpapi`                   | DPAPI protected files                                                                        | ✅      |     |       |
+| `keychain`                | macOS Keychain                                                                               |         | ✅  |       |
+| `secretservice`           | [freedesktop.org Secret Service API](https://specifications.freedesktop.org/secret-service/) |         |     | ✅    |
+| `gpg`                     | GPG/[`pass`](https://www.passwordstore.org/) compatible files                                |         | ✅  | ✅    |
+| `cache`                   | Git's built-in [credential cache](https://git-scm.com/docs/git-credential-cache)             |         | ✅  | ✅    |
+| `plaintext`               | Plaintext files                                                                              | ✅      | ✅  | ✅    |
 
 以下の形式で設定しますが、最新の方法は公式ドキュメントから確認してください。
 
@@ -387,9 +460,9 @@ git config --global credential.credentialStore xxx
 `store`は GCM 独自のパスに保存していたりしており、
 **厳密には GCM 用にカスタマイズされてます。**
 
-設定としては、あくまで `git config --global credential.help "manager-core"` があり、
-そのオプションとして `git config --global credential.cacheOptions "--timeout 300"`があります。
-従って、単に `git config --global credential.credentialStore cache && git config --global credential.helper cache --timeout 300` と設定するのとは異なります。
+設定としては、あくまで`git config --global credential.help "manager-core"`があり、
+そのオプションとして`git config --global credential.cacheOptions "--timeout 300"`があります。
+従って、単に`git config --global credential.credentialStore cache && git config --global credential.helper cache --timeout 300`と設定するのとは異なります。
 
 同じ事を、設定項目でも比較すると以下のようになります。
 
@@ -406,27 +479,17 @@ git config --global credential.credentialStore xxx
 
 :::
 
-## WSL から Windows と資格情報の共有
+## (上級者向け) キャッシュでアクセストークンを PC に残さない
 
-@[card](https://github.com/GitCredentialManager/git-credential-manager/blob/main/docs/wsl.md)
+> GCM can now also use Git’s git-credential-cache helper that is commonly built and available in many Git distributions. This is a great option for cloud shells or ephemeral environments when you don’t want to persist credentials permanently to disk but still want to avoid a prompt for every git fetch or git push. [^github-20220407]
 
-WSL 内に直接 GCM をインストールすると、Windows の資格情報にアクセスできません。
-従って、WSL 内の設定では、Windows 側の GCM の実行パスを設定して、資格情報の共有を可能にしましょう。
-
-```bash
-git config --global credential.helper "/mnt/c/Program\ Files/Git/mingw64/bin/git-credential-manager-core.exe"
-# If you intend to use Azure DevOps you must also set the following Git configuration inside of your WSL installation.
-git config --global credential.https://dev.azure.com.useHttpPath true
-```
-
-## キャッシュでアクセストークンを Local に残さない
-
-GCM で発行・管理しても、アクセストークンを認証情報マネージャーで保管してるだけで、実質 1 要素認証のままじゃない? と思うかもしれません。
+GCM で発行・管理しても、アクセストークンを認証情報マネージャーで保管してるだけで、
+実質 1 要素認証のままじゃない? と思うかもしれません。
 そこでキャッシュをお勧めします。
 
 これなら無効化しなくても、発行元ぐらいしかトークンを知らないので漏れる心配はありません。
 また、キャッシュが切れる度に GCM を介してブラウザ経由の 2 要素認証が求められるようになります。
-因みにこれは、内蔵の Git の `credential-cache` を使用して実現しています。
+因みにこれは、内蔵の Git の`credential-cache`を使用して実現しています。
 
 :::message alert
 Windows 向けの Git は、 Unix Sockets に対応していないので、キャッシュは使えません。
@@ -434,11 +497,13 @@ Windows 向けの Git は、 Unix Sockets に対応していないので、キ�
 正確には、Git には Windows でも Unix Sockets をサポートする設定が存在していますが、無効化されて配布されています。
 自分でビルドすれば可能らしいですが、コントリビューターのレビューで、対応するまではエラー終了するようになりました[^gcm-pr-729]。
 公式に Git でサポートされるのを待ちましょう。
-待てない場合は、自分でビルドしようとのことでした。
+待てない場合は、自分でビルドしようとの事でした。
 [^gcm-pr-729]: https://github.com/GitCredentialManager/git-credential-manager/pull/729
+
+参考: [🤔Q-06. "`credential-cache`on Windows"は可能か?](#🤔q-06.-"credential-cacheon-windows"は可能か%3F)
 :::
 
-## 従来方法との比較
+## 願望
 
 本当は、
 **「GCM 導入によって 2 要素認証を経由してアクセスできるので、セキュリティ的に改善する」**
@@ -451,27 +516,27 @@ OAuth2.0 のリフレッシュトークンでアクセストークンを入れ�
 どうしてもアクセストークンを使い回したくない場合は、
 定期的に自分で GCM のアクセストークンを無効化して再発行させるしかなさそうです。
 ::::message
-オンプレミス版 GitLab なら、以下コマンドの自動実行で無効化して、2 要素認証を強要する運用もあり得ます。
+オンプレミス環境 GitLab なら、以下コマンドの自動実行で無効化して、2 要素認証を強要する運用もあり得ます。
+インスタンスやグループ、ユーザーのレベルで作成しても同じ形式で無効化できるようでした。
 
-```bash
-# token.application_id == 1がGCMの場合
-gitlab-rails runner "OauthAccessToken.all.filter_map { | token | token.revoke if token.application_id == 1 && token.revoked? == false }"
+```bash:GCMに関する全てのアカウントのアクセストークンを無効化するスクリプト
+gitlab-rails runner "OauthAccessToken.all.filter_map { | oauthAccessToken | oauthAccessToken.revoke if oauthAccessToken.application_id == ${GCMのID} }"
 ```
 
 ::::
 
-# Q&A
+# 🤔Q&A
 
-想定されるものを簡単に纏めました。
+より詳細に知りたい方向けに、想定されるものを簡単に纏めました。
 再掲事項も含みます。
 
-## 🤔 個人アクセストークン(PAT)と GCM 用の OAuth アクセストークンって本当に違うもの?
+## 🤔Q-01. 個人アクセストークン(PAT)と GCM 用の OAuth アクセストークンって本当に違うもの?
 
 GitLab に関しては恐らくそうです。
 但し、GitHub では、GCM が OAuth Application と言い張っている一方で、
 次項で述べる様に、仕様がそうなっていないようなので、分からないです。
 
-## 🤔 GCM のアクセストークンは OAuth として発行されている?
+## 🤔Q-02. GCM のアクセストークンは OAuth として発行されている?
 
 保存された認証情報を見る限り、GitLab や Bitbucket の場合は恐らくそうですが、GitHub では怪しかったです。
 
@@ -495,7 +560,7 @@ GitHub のドキュメント、構造が分かり難くて理解し切れてい�
 自分自身、OAuth の仕様理解自体が疎かなので調査しておきます……
 :::
 
-## 🤔 GCM よりも、2 要素認証でログインしてから必ず有効期限付きで PAT 発行した方が安全では?
+## 🤔Q-03. GCM よりも、2 要素認証でログインしてから必ず有効期限付きで PAT 発行した方が安全では?
 
 はい、恐らくその通りです。
 OAuth2 の場合は、頻繁にアクセストークンは変わる筈なので、
@@ -511,7 +576,7 @@ GitHub は、リフレッシュトークンが使われているのかは把握�
 Windows なら認証情報マネージャー(`wincred`) (mac なら、`osxkeychain`?)
 に保存しておけば、安心でしょう。
 
-## 🤔 PC に保存したアクセストークンは覗ける?
+## 🤔Q-04. PC に保存したアクセストークンは覗ける?
 
 Windows の場合、資格情報マネージャーから表示できるらしいですが、自分の環境では無理でした。
 
@@ -537,7 +602,7 @@ username=sample-user
 password=${sample-userのアクセストークン}
 ```
 
-## 🤔 初回アクセス時は必ず 2 要素認証でログインしたいんだが?
+## 🤔Q-05. 初回アクセス時は必ず 2 要素認証でログインしたいんだが?
 
 案としては、以下があります。
 
@@ -547,38 +612,37 @@ password=${sample-userのアクセストークン}
 但し、1 は手間ですし、
 2 に関しては [Git for Windows](https://github.com/git-for-windows/git) が対応していないので Windows のみ無理です。
 
-## 🤔 "`credential-cache` on Windows"は可能か?
+## 🤔Q-06. "`credential-cache`on Windows"は可能か?
 
-> Full disclosure: Technically, since Git v2.34.0, `git-credential-cache.exe` [_can_ be built and run on Windows](https://github.com/git/git/commit/c2e799012b3). Unix Sockets support [has been introduce into Windows](https://devblogs.microsoft.com/commandline/af_unix-comes-to-windows/). The problem is that you need Windows 10 build 17061 or later, and Git for Windows still supports even Vista (although [it has been announced that Git for Windows will drop supporting Vista really soon now](https://github.com/git-for-windows/build-extra/commit/c7e2c3cda90f4681400852d1207f74e96d8b1ff6)). [^gcm-issue-723-comment]
+> Full disclosure: Technically, since Git v2.34.0,`git-credential-cache.exe`[_can_ be built and run on Windows](https://github.com/git/git/commit/c2e799012b3). Unix Sockets support [has been introduce into Windows](https://devblogs.microsoft.com/commandline/af_unix-comes-to-windows/). The problem is that you need Windows 10 build 17061 or later, and Git for Windows still supports even Vista (although [it has been announced that Git for Windows will drop supporting Vista really soon now](https://github.com/git-for-windows/build-extra/commit/c7e2c3cda90f4681400852d1207f74e96d8b1ff6)). [^gcm-issue-723-comment]
 
 [^gcm-issue-723-comment]: https://github.com/GitCredentialManager/git-credential-manager/issues/723#issuecomment-1146817218
 
 [Git for Windows](https://github.com/git-for-windows/git) 自体は、v2.34.0 から Unix Sockets に対応しましたが、
-後方互換の為に、`NO_UNIX_SOCKETS = YesPlease` として無効化されています。
+後方互換の為に、`NO_UNIX_SOCKETS = YesPlease`として無効化されています。
 Vista のサポートは 2023 年より前に打ち切るとは伺えましたが、古いビルドバージョンのサポートは残っているので、公式に対応してくれる見通しは未だ無いです。
-(ドキュメントから Windows は消して、エラーメッセージも出力する事になりました[^git-credential-manager-pull-729]😩)
-[^git-credential-manager-pull-729]: [Remove windows from `credential-cache` in `credstores.md` by miya789 · Pull Request #729 · GitCredentialManager/git-credential-manager](https://github.com/GitCredentialManager/git-credential-manager/pull/729)
+(ドキュメントから Windows は消して、エラーメッセージも出力する事になりました[^gcm-pr-729]😩)
 
 従って、どうしても使いたい場合は、Git や GCM をビルドして使いましょう。
 
-## 🤔 Linux 環境で GCM の UI が表示されないが?
+## 🤔Q-07. Linux 環境で GCM の UI が表示されないが?
 
 「Avalonia により.NET でも Linux 対応」とあるにも拘わらず、UI が出て来なくて焦る場合もあると思います。
-これは、`LANG`を `en_US.UTF-8`以外に設定していると発生する、Avalonia 由来の仕様です。
+これは、`LANG`を`en_US.UTF-8`以外に設定していると発生する、Avalonia 由来の仕様です。
 
 https://github.com/AvaloniaUI/Avalonia/issues/4427
 
-## 🤔GCM はどのように OAuth2 アプリケーションとして UI を表示して動作している?
+## 🤔Q-08. GCM はどのように OAuth2 アプリケーションとして UI を表示して動作している?
 
 以下の様に、ホスト名で判別しています。
-なので、これに該当しないオンプレミス環境 GitLab は `generic` として認識され UI が表示されません。
+なので、これに該当しないオンプレミス環境 GitLab は`generic`として認識され UI が表示されません。
 https://github.com/GitCredentialManager/git-credential-manager/blob/v2.0.779/src/shared/GitLab/GitLabConstants.cs#L48
 
-因みに、`OAuthClientId` や `OAuthClientSecret` もソースコードに埋め込まれており、
+因みに、`OAuthClientId`や`OAuthClientSecret`もソースコードに埋め込まれており、
 他の設定値もここに記載されています。
 https://github.com/GitCredentialManager/git-credential-manager/blob/v2.0.779/src/shared/GitLab/GitLabConstants.cs#L7-L13
 
-## 🤔 オンプレミス環境の GitLab 対応はどうする?
+## 🤔Q-09. オンプレミス環境の GitLab 対応はどうする?
 
 @[card](https://github.com/GitCredentialManager/git-credential-manager/blob/main/docs/gitlab.md)
 
@@ -587,25 +651,24 @@ https://github.com/GitCredentialManager/git-credential-manager/blob/v2.0.779/src
 
 > ## 別インスタンスでの使い方
 >
-> 別インスタンスで使う為に、例えば `https://gitlab.example.com` では以下の設定が必要です。
+> 別インスタンスで使う為に、例えば`https://gitlab.example.com`では以下の設定が必要です。
 >
 > 1. [Create an OAuth application](https://docs.gitlab.com/ee/integration/oauth_provider.html). これは、ユーザーやグループ、インスタンスのレベルで行えます。
->    まず、名前やリダイレクト先を `http://127.0.0.1/` で指定してください。
+>    まず、名前やリダイレクト先を`http://127.0.0.1/`で指定してください。
 >    そして、'Confidential' オプションは選択せず、'Expire access tokens' オプションは選択してください。
 >    最後に、'write_repository' や 'read_repository' のスコープを設定してください。
-> 1. application ID をコピーして、`git config --global credential.https://gitlab.example.com.GitLabDevClientId <APPLICATION_ID>` で設定してください。
-> 1. application secret をコピーして、`git config --global credential.https://gitlab.example.com.GitLabDevClientSecret <APPLICATION_SECRET>` で設定してください。
-> 1. `git config --global credential.https://gitlab.example.com.gitLabAuthModes browser` のように'browser'を含めて authentication modes を設定してください。
-> 1. 念の為に、`git config --global credential.https://gitlab.example.com.provider gitlab` を設定してください。これは、ドメインを GitLab インスタンスとして認識させるのに必要かもしれません。
-> 1. `git config --global --get-urlmatch credential https://gitlab.example.com` で、設定が期待通りかどうか確認してください。
+> 1. application ID をコピーして、`git config --global credential.https://gitlab.example.com.GitLabDevClientId <APPLICATION_ID>`で設定してください。
+> 1. application secret をコピーして、`git config --global credential.https://gitlab.example.com.GitLabDevClientSecret <APPLICATION_SECRET>`で設定してください。 1.`git config --global credential.https://gitlab.example.com.gitLabAuthModes browser`のように'browser'を含めて authentication modes を設定してください。
+> 1. 念の為に、`git config --global credential.https://gitlab.example.com.provider gitlab`を設定してください。これは、ドメインを GitLab インスタンスとして認識させるのに必要かもしれません。 1.`git config --global --get-urlmatch credential https://gitlab.example.com`で、設定が期待通りかどうか確認してください。
 
 :::message
 今後のアップデートで自動対応する可能性もあります。
 :::
 
-## 🤔HTTPS 非対応のオンプレミス環境 GitLab でも使える?
+## 🤔Q-10. HTTPS 非対応のオンプレミス環境 GitLab でも使える?
 
 無理です。エラーメッセージがそう言ってました。
+諦めて自己署名証明書を用意しましょう。
 
 ```bash:HTTPSでないとGitLabとして処理できないとエラー
 $ GIT_TRACE=1 git clone http://gitlab.example.com/sample-user/private-repository.git
@@ -627,7 +690,7 @@ Username for 'http://gitlab.example.com':
 
 # 補足
 
-https://twitter.com/akatsukioffici3/status/1530537511717482498?s=20&t=mMcJzi-SsGXbdeU6B4_IXw
+https://twitter.com/akatsukioffici3/status/1530537511717482498
 
 このすば三期おめでとうございます！🎉
 
