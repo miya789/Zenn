@@ -1,5 +1,5 @@
 ---
-title: "GitHub等へのHTTPS接続用に個人用アクセストークンを求めるのは間違っているだろうか"
+title: "GitHub等へのHTTPS接続用に個人用アクセストークンを求めるのは間違っているだろうか (Git Credential Manager)"
 emoji: "🔑"
 type: "tech"
 topics: [windows, gcm, github, gitlab, bitbucket]
