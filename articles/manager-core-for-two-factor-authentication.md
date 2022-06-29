@@ -287,7 +287,8 @@ Windows / Mac だと`wincred`/`osxkeychain`も利用可能です[^git-tools-cred
 # [Git Credential Manager (GCM)](https://github.com/GitCredentialManager/git-credential-manager)
 
 https://github.blog/2022-04-07-git-credential-manager-authentication-for-everyone/
-2022/04/07 に GitHub から公式にアナウンスされ、広く推奨されるようになったばかりです。
+2 年前にもアナウンス[^github-20200702]されており、使用例の記事[^qiita-11dd107a0734fec682b8] [^zenn-940dc902d9fadf]もありましたが、
+2022/04/07 に GitHub から再び公式アナウンスされ、広く推奨され始めたばかりです。
 この発表に於けるポイントとしては、以下です。
 
 - 以前までの [GCM for Windows](https://github.com/microsoft/git-credential-manager-for-windows) and [GCM for Mac and Linux](https://github.com/microsoft/git-credential-manager-for-mac-and-linux) を統合
@@ -301,6 +302,10 @@ https://github.blog/2022-04-07-git-credential-manager-authentication-for-everyon
   - オンプレミス環境の場合は別途設定が必要[^gcm-gitlab]だが、改善予定あり
 - 認証情報に関して、様々な保存方法を設定可能
   - デフォルトの認証情報マネージャー、GPG 暗号化ファイル、キャッシュ等
+
+[^github-20200702]: [Git Credential Manager Core: Building a universal authentication experience | The GitHub Blog](https://github.blog/2020-07-02-git-credential-manager-core-building-a-universal-authentication-experience/)
+[^qiita-11dd107a0734fec682b8]: [git で 2 要素認証を突破するための Git Credential Manager Core の紹介 - Qiita](https://qiita.com/skkzsh/items/11dd107a0734fec682b8)
+[^zenn-940dc902d9fadf]: [https で git のパスワードを毎回入力したくない (主に Linux) (zenn.dev)](https://zenn.dev/2lu3/articles/940dc902d9fadf)
 
 :::message alert
 Azure Devops 関連はちょっと知らないです…
