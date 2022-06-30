@@ -421,7 +421,7 @@ WSL 内に直接 GCM をインストールすると、Windows の資格情報に
 WSL 内の設定として Windows 側の GCM の実行パスを設定しましょう。[^gcm-wsl]
 [^gcm-wsl]: https://github.com/GitCredentialManager/git-credential-manager/blob/main/docs/wsl.md
 
-```bash
+```bash:WSLからWindowsと資格情報を共有する為の設定
 git config --global credential.helper "/mnt/c/Program\ Files/Git/mingw64/bin/git-credential-manager-core.exe"
 # If you intend to use Azure DevOps you must also set the following Git configuration inside of your WSL installation.
 git config --global credential.https://dev.azure.com.useHttpPath true
@@ -644,8 +644,13 @@ https://github.com/AvaloniaUI/Avalonia/issues/4427
 ## 🤔Q-08. GCM はどのように OAuth2 アプリケーションとして UI を表示して動作している?
 
 以下の様に、ホスト名で判別しています。
-なので、これに該当しないオンプレミス環境 GitLab は`generic`として認識され UI が表示されません。
 https://github.com/GitCredentialManager/git-credential-manager/blob/v2.0.779/src/shared/GitLab/GitLabConstants.cs#L48
+
+:::message
+この動作により、GitLab.com に該当しないオンプレミス環境 GitLab は、
+`generic`として認識され UI が表示されないので、別途対応する必要があります。
+参考: [🤔Q-09. オンプレミス環境の GitLab 対応はどうする?](#🤔q-09.-オンプレミス環境の-gitlab-対応はどうする%3F)
+:::
 
 因みに、`OAuthClientId`や`OAuthClientSecret`もソースコードに埋め込まれており、
 他の設定値もここに記載されています。
@@ -653,10 +658,9 @@ https://github.com/GitCredentialManager/git-credential-manager/blob/v2.0.779/src
 
 ## 🤔Q-09. オンプレミス環境の GitLab 対応はどうする?
 
-@[card](https://github.com/GitCredentialManager/git-credential-manager/blob/main/docs/gitlab.md)
-
-基本的には、上記リンクの指示に従います。
+基本的には、公式の GitLab に関する補足ドキュメント[^gcm-gitlab]に従います。
 一部抜粋して和訳したものを以下に記します。
+[^gcm-gitlab]: https://github.com/GitCredentialManager/git-credential-manager/blob/main/docs/gitlab.md
 
 > ## 別インスタンスでの使い方
 >
@@ -668,7 +672,17 @@ https://github.com/GitCredentialManager/git-credential-manager/blob/v2.0.779/src
 >    最後に、'write_repository' や 'read_repository' のスコープを設定してください。
 > 1. application ID をコピーして、`git config --global credential.https://gitlab.example.com.GitLabDevClientId <APPLICATION_ID>`で設定してください。
 > 1. application secret をコピーして、`git config --global credential.https://gitlab.example.com.GitLabDevClientSecret <APPLICATION_SECRET>`で設定してください。 1.`git config --global credential.https://gitlab.example.com.gitLabAuthModes browser`のように'browser'を含めて authentication modes を設定してください。
-> 1. 念の為に、`git config --global credential.https://gitlab.example.com.provider gitlab`を設定してください。これは、ドメインを GitLab インスタンスとして認識させるのに必要かもしれません。 1.`git config --global --get-urlmatch credential https://gitlab.example.com`で、設定が期待通りかどうか確認してください。
+> 1. 念の為に、`git config --global credential.https://gitlab.example.com.provider gitlab`を設定してください。これは、ドメインを GitLab インスタンスとして認識させるのに必要かもしれません。
+> 1. `git config --global --get-urlmatch credential https://gitlab.example.com`で、設定が期待通りかどうか確認してください。
+
+ターミナル上で行う操作のみを纏めると以下の通りです。
+
+```bash:ターミナル上での操作手順
+git config --global credential.https://gitlab.example.com.GitLabDevClientId ${登録したGCMのAPPLICATION_ID}
+git config --global credential.https://gitlab.example.com.GitLabDevClientSecret ${登録したGCMのAPPLICATION_SECRET}
+git config --global credential.https://gitlab.example.com.provider gitlab
+git config --global --get-urlmatch credential https://gitlab.example.com
+```
 
 :::message
 今後のアップデートで自動対応する可能性もあります。
@@ -679,7 +693,7 @@ https://github.com/GitCredentialManager/git-credential-manager/blob/v2.0.779/src
 無理です。エラーメッセージがそう言ってました。
 諦めて自己署名証明書を用意しましょう。
 
-```bash:HTTPSでないとGitLabとして処理できないとエラー
+```bash:HTTPSでないとGitLabとして処理できずエラー
 $ GIT_TRACE=1 git clone http://gitlab.example.com/sample-user/private-repository.git
 22:28:30.042786 exec-cmd.c:237          trace: resolved executable dir: C:/Program Files/Git/mingw64/bin
 22:28:30.043790 git.c:459               trace: built-in: git clone http://gitlab.example.com/sample-user/private-repository.git
@@ -700,7 +714,7 @@ Username for 'http://gitlab.example.com':
 ## 🤔Q-11. `pass` コマンドが連携できるなら、1Password を保存先として連携できる?
 
 :::message
-余力や要望があれな、以下などを参考に調査します。
+余力や要望があれば、以下を参考に調査します。
 https://dev.classmethod.jp/articles/create_git_credential_helper_with_1password/
 :::
 
