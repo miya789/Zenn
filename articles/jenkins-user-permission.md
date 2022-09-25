@@ -1,10 +1,9 @@
 ---
 title: "Jenkinsユーザーの一括追加、前からするか？後からするか？"
 emoji: "⛏️"
-# emoji: "⛑️⛏️🚀"
 type: "tech"
 topics: [jenkins, groovy]
-published: false
+published: true
 ---
 
 # TL;DR
