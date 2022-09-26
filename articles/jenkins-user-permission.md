@@ -153,7 +153,7 @@ instance.save()
 
 ## 4. 付与する権限の確認
 
-- 選択肢: Enum 指定 or Group 指定
+- 選択肢: Permission クラス定数 指定 or Group 指定
 
 主に `PermissionGroup` -> `Permission` の流れで、付与したい権限を特定していきます。
 
@@ -172,9 +172,9 @@ def groups = hudson.security.PermissionGroup.getAll()
 // ]
 ```
 
-::::details PermissionGroup の Enum 指定方法
+::::details PermissionGroup の Permission クラス定数 指定方法
 
-`PermissionGroup` の Enum は、以下の様に 2 通りの方法で絞れます。
+`PermissionGroup` の Permission クラス定数 は、以下の様に 2 通りの方法で絞れます。
 
 ```groovy:PermissionGroup.get(Class owner) で指定する方法
 hudson.security.PermissionGroup.get(hudson.model.Hudson.class)
@@ -189,7 +189,7 @@ hudson.security.PermissionGroup.get(hudson.security.Permission.class)
 // PermissionGroup[hudson.security.Permission]
 ```
 
-```groovy:Enum で指定する方法
+```groovy:Permission クラス定数 で指定する方法
 println hudson.model.Hudson.PERMISSIONS
 // PermissionGroup[hudson.model.Hudson]
 println hudson.model.Computer.PERMISSIONS
@@ -245,9 +245,9 @@ Permission[class hudson.security.Permission,GenericWrite]
 
 :::message
 
-一方でこんな方法もありますが、各 Enum が登録された順序だからなのか、汚いですね……
+一方でこんな方法もありますが、各 Permission クラス定数が登録された順序だからなのか、汚いですね……
 
-```groovy:Permission に登録された Enum を一覧取得する方法
+```groovy:Permission に登録された Permission クラス定数を一覧取得する方法
 def permissions = hudson.security.Permission.ALL
 // [
 //   Permission[class hudson.model.Hudson,Administer]
@@ -260,9 +260,9 @@ def permissions = hudson.security.Permission.ALL
 
 :::
 
-### 得られた `Permission` の Enum から、扱える形式を取得
+### 得られた `Permission` の Permission クラス定数から、扱える形式を取得
 
-このままではどんな Enum を使っているのか特定しないと、ソースコードで使えません。
+このままではどんな Permission クラス定数を使っているのか特定しないと、ソースコードで使えません。
 しかし、`getId()` から取得可能な `id` を使えば、
 `PermissionGroup` から何が得られたのかをメモしておけます。
 
@@ -281,7 +281,7 @@ def permissions = hudson.security.Permission.ALL
   // ]
 ```
 
-こうして、Java 内部で呼び出すべき Enum が分からなくても、
+こうして、Java 内部で呼び出すべき Permission クラス定数が分からなくても、
 `id` と `fromId()` を使って、以下の様に呼び出し可能になりました。
 
 ```groovy
@@ -290,12 +290,12 @@ def permission = hudson.security.Permission.fromId("hudson.model.Hudson.Administ
 ```
 
 実際、設定画面では、この `id` が HTML に埋め込まれており、`fromId()` で変換して使われています。
-![設定画面において id がHTMLに埋め込まれて使われている様子](/images/jenkins-user-permission/configure-global-security-role-strategy-permission-enum.png)
+![設定画面において id がHTMLに埋め込まれて使われている様子](/images/jenkins-user-permission/configure-global-security-role-strategy-permission-class-constants.png)
 _設定画面において id が HTML に埋め込まれて使われている様子_
 
 所で、ここまで `id` を熱く推奨してきましたが、
-この記事の Q&A で `PermissionGroup` の Enum 一覧は公表しているので、
-ソースコードは Enum ありで説明します。(長くて読み難いですし……)
+この記事の Q&A で `PermissionGroup` の Permission クラス定数の一覧は公表しているので、
+ソースコードは Permission クラス定数ありで説明します。(長くて読み難いですし……)
 
 :::message
 稀に、プラグインによって突然元からいた様な顔して生えて来る権限[^where-is-hudson-model-run-replay-permission]もあり、
@@ -583,7 +583,7 @@ strategy.getGrantedPermissionEntries()
 
 [^jenkins-matrix-based-security-with]: [midweekmidmorning: Jenkins Matrix Based Security with Groovy Scripts](http://midweekmidmorning.blogspot.com/2016/06/jenkins-matrix-based-security-with.html)
 
-| id                                                                    | Enum                                |
+| id                                                                    | Permission クラス定数               |
 | --------------------------------------------------------------------- | ----------------------------------- |
 | "hudson.model.Hudson.Administer"                                      | `jenkins.model.Jenkins.ADMINISTER`  |
 | "hudson.security.Permission.FullControl"                              |                                     |
