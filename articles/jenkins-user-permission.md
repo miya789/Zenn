@@ -11,15 +11,16 @@ published: true
 - **Jenkins ユーザー**の情報は、以下の 2 種類から構成される
   - **`SecurityRealm`**: ユーザーアカウントの情報
   - **`AuthorizationStrategy`**: 認証方法に関する情報
-- **Jenkins ユーザー**をスクリプトで一括操作したい場合
+- **Jenkins ユーザー**をスクリプトで一括追加する手段は、以下の 2 通りから構成される
   - **Jenkins インスタンス起動前**なら、**Groovy Hook Script** として準備
     - きちんと置いてから再起動すれば読み込まれるが、
       一度使ったら削除しないと、起動する度に戻されて厄介なので、あまり使わなそう
   - **Jenkins インスタンス起動後**なら、**スクリプトコンソール** or **jenkins-cli.jar**
     - ユーザーアカウントやロールは何度も同じものを追加しないので、こちらがメイン
-    - `jenkins-cli.jar` の場合は、管理者権限を持つユーザーアカウントの API キーが必要
+    - `jenkins-cli.jar` なら、管理者権限を持つユーザーアカウントの API キーが必要
 - [`role-strategy`](https://github.com/jenkinsci/role-strategy-plugin)を使って、ロールとして付与する方が楽なので推奨
   - ロールを自作するようなスクリプトを書いて、[`matrix-auth`](https://plugins.jenkins.io/matrix-auth/) だけで乗り切りるのも可能
+  <!-- 具体的には? -->
 
 # 背景: Jenkins のユーザー情報とは?
 
@@ -37,7 +38,7 @@ published: true
     - `hudson.security.ProjectMatrixAuthorizationStrategy`
     - `com.michelin.cio.hudson.plugins.rolestrategy.RoleBasedAuthorizationStrategy`
 
-特に、**`AuthorizationStrategy`** は、プラグインによって詳細な権限設定が可能です。
+殊 **`AuthorizationStrategy`** は、プラグインにる詳細な権限設定が可能です。
 これらは、`config.xml` として保持され、起動時はまずこれを読み込みます。
 
 :::message
@@ -47,25 +48,26 @@ published: true
 # 目的: ソースコードで一括追加したくないですか?
 
 ユーザーを作っただけだと、権限を全員共通でしか扱えず不便なので、個別に設定します。
-そこで一般的[^jenkins-managing-security]なのは、以下の様な Web UI から操作する[`matrix-auth`](https://plugins.jenkins.io/matrix-auth/) によるものでしょう。
+そこで一般的[^jenkins-managing-security]なのは、以下の様な Web UI から操作する[`matrix-auth`](https://plugins.jenkins.io/matrix-auth/) でしょう。
+[^jenkins-managing-security]: [Managing Security](https://www.jenkins.io/doc/book/security/managing-security/)
 
 ![`matrix-auth`の操作画面](/images/jenkins-user-permission/configure-global-security-matrix-authorization.png)
 _`matrix-auth`の操作画面_
 
-しかし、これの操作面倒臭くないですか?
-予め誰のアカウントを登録し権限も付与するのか決まっているのに、ブラウザの Web UI で毎回、ユーザー名を入力して枠を作り、テーブルのチェックを入れて登録……
+しかし、これの操作、面倒臭くないですか?
+予め「誰のアカウントを登録し権限も付与するのか」決まっているのに、ブラウザの Web UI で毎回、ユーザー名を入力して枠を作りカーソルをテーブルのチェックに入れてクリック、ユーザー名を入力して枠を作りカーソルをテーブルのチェックに入れてクリック、ユーザー名を入力して枠を作りカーソルをテーブルのチェックに入れてクリック……
 
 可能なら、全て配列とか適当な文字列のものを流し込んで、一括でやりたくないですか?
-Jenkins インスタンスに対して、**コードによって一括で登録したり削除したり**したくないですか?
+Jenkins インスタンスに対して、**ソースコードで一括追加**したくないですか?
 
 # 方法
 
 ## 1. Groovy スクリプトの実行方法を選択
 
-設定方法は、従来通りの **設定画面** と **Groovy スクリプト** の 2 通りですが、今回は後者の説明をします。
+設定方法は、**設定画面**(従来)と**Groovy スクリプト**の 2 通りですが、今回は後者の説明をします。
 中でも、**Groovy スクリプト** の使い方に関しては以下の 2 通りですが、起動後が個人的にはお勧めです。
 
-| 実行タイミング | 手段                                     | ユーザー追加に使うべきか        |
+| 実行タイミング | 手段                                     | ユーザーの一括追加に使うべき?   |
 | -------------- | ---------------------------------------- | ------------------------------- |
 | 起動前         | Groovy Hook Script                       | ❌ 毎回読み込むものではないので |
 | 起動後(起動中) | スクリプトコンソール or `jenkis-cli.jar` | ✅ 一時的なものなので           |
@@ -127,7 +129,7 @@ RUN jenkins-plugin-cli --plugins role-strategy
 
 - 選択肢: 設定画面 or Groovy スクリプト
 
-後述の権限付与だけも可能ですが、ユーザーがいないとこのような画面になってしまいます。
+後述の権限付与だけも可能ですが、ユーザーが不在だとこのような画面になってしまいます。
 なので一応やっておきましょう。
 ![権限を付与したユーザーアカウントが無いと出て来るエラー](/images/jenkins-user-permission/configure-global-security-matrix-authorization-with-error.png)
 _権限を付与したユーザーアカウントが無いと出て来るエラー_
@@ -148,7 +150,7 @@ def instance = jenkins.model.Jenkins.instance
 def realm = instance.securityRealm
 realm.createAccount(user_name, pass)
 
-instance.save()
+instance.save() // ログにも残せるので推奨
 ```
 
 ## 4. 付与する権限の確認
@@ -226,7 +228,7 @@ Permission[class hudson.security.Permission,GenericWrite]
 
 ### `PermissionGroup` から `Permission` の一覧取得
 
-最後に、これらグループから [`getPermissions()`](https://github.com/jenkinsci/jenkins/blob/master/core/src/main/java/hudson/security/PermissionGroup.java#L107) によって、これに所属する `Permission` の一覧が取得できます。
+最後に、各 `PermissionGroup` グループから [`getPermissions()`](https://github.com/jenkinsci/jenkins/blob/master/core/src/main/java/hudson/security/PermissionGroup.java#L107) によって、これに所属する `Permission` の一覧が取得できます。
 
 ```diff groovy:PermissionGroup から Permission を取り出す方法
   def groups = hudson.security.PermissionGroup.getAll()
@@ -260,11 +262,10 @@ def permissions = hudson.security.Permission.ALL
 
 :::
 
-### 得られた `Permission` の Permission クラス定数から、扱える形式を取得
+### `Permission` から `id` の取得
 
-このままではどんな Permission クラス定数を使っているのか特定しないと、ソースコードで使えません。
-しかし、`getId()` から取得可能な `id` を使えば、
-`PermissionGroup` から何が得られたのかをメモしておけます。
+`Permission` は一覧取得できましたが、実際にどのような `Permission` クラス定数を使っているのか特定できていないので、未だソースコードで使えません。
+しかし、実は各`Permission` の `getId()` から取得可能な `id` が分かれば、クラス定数を特定する必要はありません。
 
 ```diff groovy
   def groups = hudson.security.PermissionGroup.getAll()
@@ -281,7 +282,7 @@ def permissions = hudson.security.Permission.ALL
   // ]
 ```
 
-こうして、Java 内部で呼び出すべき Permission クラス定数が分からなくても、
+こうして、Java 内部で呼び出すべき `Permission` クラス定数が分からなくても、
 `id` と `fromId()` を使って、以下の様に呼び出し可能になりました。
 
 ```groovy
@@ -289,9 +290,12 @@ def permission = hudson.security.Permission.fromId("hudson.model.Hudson.Administ
 // Permission[class hudson.model.Hudson,Administer]
 ```
 
-実際、設定画面では、この `id` が HTML に埋め込まれており、`fromId()` で変換して使われています。
+:::message
+実際、設定画面では、この `id` が HTML に埋め込まれており、
+内部では `fromId()` で変換して使われています。
 ![設定画面において id がHTMLに埋め込まれて使われている様子](/images/jenkins-user-permission/configure-global-security-role-strategy-permission-class-constants.png)
 _設定画面において id が HTML に埋め込まれて使われている様子_
+:::
 
 所で、ここまで `id` を熱く推奨してきましたが、
 この記事の Q&A で `PermissionGroup` の Permission クラス定数の一覧は公表しているので、
@@ -299,7 +303,7 @@ _設定画面において id が HTML に埋め込まれて使われている様
 
 :::message
 稀に、プラグインによって突然元からいた様な顔して生えて来る権限[^where-is-hudson-model-run-replay-permission]もあり、
-苦しむ事になるのであまりお勧めしないです。
+苦しむ事になるので、`Permission` クラス定数の特定はあまりお勧めしないです。
 :::
 
 [^where-is-hudson-model-run-replay-permission]: [jenkins - Where is hudson.model.Run.Replay permission object defined? - Stack Overflow](https://stackoverflow.com/questions/59665635/where-is-hudson-model-run-replay-permission-object-defined)
@@ -323,7 +327,7 @@ def strategy = new com.michelin.cio.hudson.plugins.rolestrategy.RoleBasedAuthori
 def globalRoleMap = strategy.getRoleMap(com.synopsys.arc.jenkins.plugins.rolestrategy.RoleType.Global)
 ```
 
-### `Permission` の `HashSet` を用意
+### `Permission` から成る `HashSet` の作成
 
 では次に、ロールが無い想定で作成します。
 まず、使いたい `Permission` で `HashSet` を作りましょう。
@@ -335,10 +339,9 @@ def globalRoleMap = strategy.getRoleMap(com.synopsys.arc.jenkins.plugins.rolestr
   def instance = jenkins.model.Jenkins.instance
   def strategy = new com.michelin.cio.hudson.plugins.rolestrategy.RoleBasedAuthorizationStrategy()
   def globalRoleMap = strategy.getRoleMap(com.synopsys.arc.jenkins.plugins.rolestrategy.RoleType.Global)
-
++
 + def _permissions = new HashSet<>()
 + _permissions.add(jenkins.model.Jenkins.READ) // これは必ず必要
-+
 + _permissions.add(hudson.model.Item.BUILD)
 + _permissions.add(hudson.model.Item.READ)
 + _permissions.add(hudson.model.Item.CONFIGURE)
@@ -353,20 +356,6 @@ def globalRoleMap = strategy.getRoleMap(com.synopsys.arc.jenkins.plugins.rolestr
 
 ::::message
 `enabled` でない `Permission` も混ざる可能性があるので、一応フィルターしています。
-
-```diff groovy:付与する権限によるロールの作成 & Jenkins ユーザーへロールのアサイン (起動前) 2.5/5
-  ...
-
-  def _permissions = new HashSet<>()
-  _permissions.add(jenkins.model.Jenkins.READ) // これは必ず必要
-
-  _permissions.add(hudson.model.Item.BUILD)
-  _permissions.add(hudson.model.Item.READ)
-  _permissions.add(hudson.model.Item.CONFIGURE)
-  _permissions.add(hudson.model.Item.DELETE)
-+ permissions = new HashSet<>(_permissions.stream().filter{ it.enabled }.collect()) // enableでないPermissionを除去
-```
-
 ::::
 
 ### `Role` の作成
@@ -381,7 +370,6 @@ def globalRoleMap = strategy.getRoleMap(com.synopsys.arc.jenkins.plugins.rolestr
 
   def _permissions = new HashSet<>()
   _permissions.add(jenkins.model.Jenkins.READ) // これは必ず必要
-
   _permissions.add(hudson.model.Item.BUILD)
   _permissions.add(hudson.model.Item.READ)
   _permissions.add(hudson.model.Item.CONFIGURE)
@@ -392,6 +380,8 @@ def globalRoleMap = strategy.getRoleMap(com.synopsys.arc.jenkins.plugins.rolestr
 + globalRoleMap.addRole(role)
 + globalRoleMap.assignRole(role, user_name)
 ```
+
+### 管理者権限を持つユーザーアカウントの作成
 
 このまま、`instance.setAuthorizationStrategy(strategy)` したい所ですが、
 管理者権限を誰かしらに与えておきましょう。
@@ -406,7 +396,6 @@ def globalRoleMap = strategy.getRoleMap(com.synopsys.arc.jenkins.plugins.rolestr
 
   def _permissions = new HashSet<>()
   _permissions.add(jenkins.model.Jenkins.READ) // これは必ず必要
-
   _permissions.add(hudson.model.Item.BUILD)
   _permissions.add(hudson.model.Item.READ)
   _permissions.add(hudson.model.Item.CONFIGURE)
@@ -426,11 +415,13 @@ def globalRoleMap = strategy.getRoleMap(com.synopsys.arc.jenkins.plugins.rolestr
 + }
 ```
 
-### `instance` に反映
+<!-- 何かを参考に -->
+
+### `instance` へ `strategy` の反映
 
 これで問題無くなったので、後は `instance.setAuthorizationStrategy(strategy)` するだけです。
 
-```diff groovy:付与する権限によるロールの作成 & Jenkins ユーザーへロールのアサイン (起動前)
+```diff groovy:付与する権限によるロールの作成 & Jenkins ユーザーへロールのアサイン (起動前) 5/5
   def user_name = "sample_user"
   def role_name = "sample_role"
 
@@ -440,7 +431,6 @@ def globalRoleMap = strategy.getRoleMap(com.synopsys.arc.jenkins.plugins.rolestr
 
   def _permissions = new HashSet<>()
   _permissions.add(jenkins.model.Jenkins.READ) // これは必ず必要
-
   _permissions.add(hudson.model.Item.BUILD)
   _permissions.add(hudson.model.Item.READ)
   _permissions.add(hudson.model.Item.CONFIGURE)
@@ -460,14 +450,16 @@ def globalRoleMap = strategy.getRoleMap(com.synopsys.arc.jenkins.plugins.rolestr
   }
 +
 + instance.setAuthorizationStrategy(strategy)
-+ instance.save()
++ instance.save() // ログにも残せるので推奨
 ```
 
 これで完成です。
 
 これは、[init.groovy.d/05_role_assign_role_addPermission.groovy](https://github.com/miya789/assigning-jenkins-users-via-groovy-scripts/blob/main/init.groovy.d/05_role_assign_role_addPermission.groovy)として、後述のリポジトリにも置いてあります。
 
-### 起動後に行う場合
+<!-- 直して -->
+
+### ⚠️ 起動後に行う場合
 
 特に起動後で何かしらセキュリティ設定した後で、上記の設定をそのまま使うと、
 既存の設定が消える虞がありますので注意してください。
@@ -483,7 +475,6 @@ def globalRoleMap = strategy.getRoleMap(com.synopsys.arc.jenkins.plugins.rolestr
 
   def _permissions = new HashSet<>()
   _permissions.add(jenkins.model.Jenkins.READ) // これは必ず必要
-
   _permissions.add(hudson.model.Item.BUILD)
   _permissions.add(hudson.model.Item.READ)
   _permissions.add(hudson.model.Item.CONFIGURE)
@@ -503,26 +494,29 @@ def globalRoleMap = strategy.getRoleMap(com.synopsys.arc.jenkins.plugins.rolestr
   }
 
 - instance.setAuthorizationStrategy(strategy)
-  instance.save()
+  instance.save() // ログにも残せるので推奨
 ```
 
 # 結果: [`role-strategy`](https://github.com/jenkinsci/role-strategy-plugin) 使用時のスクリプト
 
 https://github.com/miya789/assigning-jenkins-users-via-groovy-scripts
 
-検証用のリポジトリを作成した。
-簡単な例のみ挙げているが、他は記事を参考に組み立てて欲しい。
+検証用のリポジトリを作成しました。
+簡単な例のみ挙げていますが、他は記事を参考に組み立ててください。
 
 :::message alert
-尚、簡単に動作検証するために、非推奨である **Groovy Hook Script** を使っており、
-ソースコードも初期構築時用のものなので、
+尚、簡単に動作検証するために、本記事で非推奨とした **Groovy Hook Script** を使っており、
+ソースコードも初期構築用なので、
 スクリプトコンソール or `jenkis-cli.jar` でそのまま実行しないでください
-::::
+
+<!-- 具体的には? -->
+
+:::
 
 # 考察
 
 [Jenkins Configuration as Code](https://www.jenkins.io/projects/jcasc/)とかと組み合わせたらもっと楽にできるかもしれないですかね。
-今回は、初期起動時に話というより、起動後の話なので少し逸れそうですが……
+今回は、初期起動時の話というより、起動後の話なので少し逸れそうですが……
 
 叉、今回はあまり触れませんでしたが、外部から実行するには `jenkins-cli.jar` を使う事になります[^setup-jenkins-users-with-cli]。
 [^setup-jenkins-users-with-cli]: [deployment - Automatically setup jenkins users with CLI - Stack Overflow](https://stackoverflow.com/questions/10066536/automatically-setup-jenkins-users-with-cli)
