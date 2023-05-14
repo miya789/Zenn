@@ -513,6 +513,120 @@ https://github.com/miya789/assigning-jenkins-users-via-groovy-scripts
 
 :::
 
+ロールを使わず、公式ドキュメントに載っている[^jenkins-managing-security] [`matrix-auth`](https://plugins.jenkins.io/matrix-auth/)だけで頑張る方法も一応書いておきます。
+
+::::details 実装例
+前述のロールを自作するようなもので、割と面倒です。
+特に削除は、全ての権限を調べて消して回る必要があるので厄介ですね。
+
+<!-- 削除に関してロールと比べれば恩恵が分かる -->
+
+:::message
+尚、実装としては、Jenkins インスタンスが持つ `GlobalMatrixAuthorizationStrategy` のインスタンスを呼び出して、一部を追加や削除しています。
+但し、これは空の entry が残る自体を誘発してしまい、構造が従来のものと異なる事態を引き起こします。
+一応はエラー対応で何とかしてますが。
+:::
+
+主に[5. 付与する権限によるロールの作成 & jenkins ユーザーへロールのアサイン](#5.-付与する権限によるロールの作成-%26-jenkins-ユーザーへロールのアサイン)が変わります。
+
+<!-- - 権限に関しては、全て列挙して省くやり方もありますが、グローバルセキュリティ画面と齟齬があるのであまりお薦めしません。 -->
+
+## 追加(初回)
+
+```diff groovy:追加
+  def user_name = "sample_user"
+- def role_name = "sample_role"
+
+  def instance = jenkins.model.Jenkins.instance
+- def strategy = new com.michelin.cio.hudson.plugins.rolestrategy.RoleBasedAuthorizationStrategy()
+- def globalRoleMap = strategy.getRoleMap(com.synopsys.arc.jenkins.plugins.rolestrategy.RoleType.Global)
++ def strategy = new hudson.security.ProjectMatrixAuthorizationStrategy()
+
+  def _permissions = new HashSet<>()
+  _permissions.add(jenkins.model.Jenkins.READ) // これは必ず必要
+  _permissions.add(hudson.model.Item.BUILD)
+  _permissions.add(hudson.model.Item.READ)
+  _permissions.add(hudson.model.Item.CONFIGURE)
+  _permissions.add(hudson.model.Item.DELETE)
+  permissions = new HashSet<>(_permissions.stream().filter{ it.enabled }.collect()) // enableでないPermissionを除去
+
+- def role = new com.michelin.cio.hudson.plugins.rolestrategy.Role(role_name, permissions)
+- globalRoleMap.addRole(role)
+- globalRoleMap.assignRole(role, user_name)
++ def entry = org.jenkinsci.plugins.matrixauth.PermissionEntry.user(user_name)
++ for (permission in permissions) {
++   strategy.add(permission, entry)
++ }
+
+  // 初期構築時は、誰もログインできなくならないように実施
+- if (! globalRoleMap.getRoles().stream().anyMatch{p -> p.hasPermission(jenkins.model.Jenkins.ADMINISTER)}) {
+-   def adminRole = new com.michelin.cio.hudson.plugins.rolestrategy.Role("admin", new HashSet(Arrays.asList(jenkins.model.Jenkins.ADMINISTER)))
+-
+-   globalRoleMap.addRole(adminRole)
+-   globalRoleMap.assignRole(adminRole, "admin")
++ if (!strategy.getGrantedPermissionEntries().containsKey(jenkins.model.Jenkins.ADMINISTER)) {
++   def admin_entry = org.jenkinsci.plugins.matrixauth.PermissionEntry.user("admin")
++
++   strategy.add(jenkins.model.Jenkins.ADMINISTER, admin_entry);
+  }
+
+  instance.setAuthorizationStrategy(strategy)
+  instance.save() // ログにも残せるので推奨
+```
+
+## 削除
+
+エラー処理は、よしなに頑張ってください。
+これは先程の追加の場合と差分を示しておきました。
+当然、削除の際は、インスタンスがある筈なので、これを新規作成しませんので、ご注意ください。
+尚、ユーザーアカウントの削除と言っても、正確には権限の削除です。
+
+<!-- 例は、GitHubのこれを参照してください。 -->
+<!-- 存在するキーを周って、ユーザーアカウント削除するべきでは? -->
+
+```diff groovy:削除
+  def user_name = "sample_user"
+
+  def instance = jenkins.model.Jenkins.instance
+- def strategy = new hudson.security.ProjectMatrixAuthorizationStrategy()
++ def strategy = instance.getAuthorizationStrategy()
+
+  def _permissions = new HashSet<>()
+  _permissions.add(jenkins.model.Jenkins.READ) // これは必ず必要
+  _permissions.add(hudson.model.Item.BUILD)
+  _permissions.add(hudson.model.Item.READ)
+  _permissions.add(hudson.model.Item.CONFIGURE)
+  _permissions.add(hudson.model.Item.DELETE)
+  permissions = new HashSet<>(_permissions.stream().filter{ it.enabled }.collect()) // enableでないPermissionを除去
++
++ hudson.model.User.get(user_name).delete() // 外部と連携している場合は不要
+
+  def entry = org.jenkinsci.plugins.matrixauth.PermissionEntry.user(user_name)
+  for (permission in permissions) {
+-   strategy.add(permission, entry)
++   if (!strategy.getGrantedPermissionEntries().containsKey(permission)) {
++     throw new Exception("the specified permission is not used")
++   }
++   if (!strategy.getGrantedPermissionEntries().get(permission).contains(entry)) {
++     throw new Exception("the specified user does not exist")
++   }
++   def entries = entries.get(permission)
++   entries.remove(permission, entry)
+  }
+
+- // 初期構築時は、誰もログインできなくならないように実施
+- if (!strategy.getGrantedPermissionEntries().containsKey(jenkins.model.Jenkins.ADMINISTER)) {
+-   def admin_entry = org.jenkinsci.plugins.matrixauth.PermissionEntry.user("admin")
+-
+-   strategy.add(jenkins.model.Jenkins.ADMINISTER, admin_entry);
+- }
+
+- instance.setAuthorizationStrategy(strategy)
+  instance.save() // ログにも残せるので推奨
+```
+
+::::
+
 # 考察
 
 [Jenkins Configuration as Code](https://www.jenkins.io/projects/jcasc/)とかと組み合わせたらもっと楽にできるかもしれないですかね。
