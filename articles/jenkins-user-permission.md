@@ -649,6 +649,318 @@ Jenkins の コンテナイメージでは、以下の様に `/opt/jenkins-plugi
 
 https://github.com/jenkinsci/docker/blob/master/17/debian/bullseye/hotspot/Dockerfile#L90-L92
 
+:::message
+
+- 初期設定ではエラーが出るので使えない場合がありました。
+
+::::details ログ
+
+```bash
+jenkins-container | Running from: /usr/share/jenkins/jenkins.war
+jenkins-container | webroot: EnvVars.masterEnvVars.get("JENKINS_HOME")
+jenkins-container | 2022-09-23 11:43:38.899+0000 [id=1] INFO    winstone.Logger#logInternal: Beginning extraction from war file
+jenkins-container | 2022-09-23 11:43:39.360+0000 [id=1] WARNING o.e.j.s.handler.ContextHandler#setContextPath: Empty contextPath
+jenkins-container | 2022-09-23 11:43:39.398+0000 [id=1] INFO    org.eclipse.jetty.server.Server#doStart: jetty-10.0.11; built: 2022-06-21T21:12:44.640Z; git: d988aa016e0bb2de6fba84c1659049c72eae3e32; jvm 11.0.16.1+1
+jenkins-container | 2022-09-23 11:43:39.558+0000 [id=1] INFO    o.e.j.w.StandardDescriptorProcessor#visitServlet: NO JSP Support for /, did not find org.eclipse.jetty.jsp.JettyJspServlet
+jenkins-container | 2022-09-23 11:43:39.591+0000 [id=1] INFO    o.e.j.s.s.DefaultSessionIdManager#doStart: Session workerName=node0
+jenkins-container | 2022-09-23 11:43:39.834+0000 [id=1] INFO    hudson.WebAppMain#contextInitialized: Jenkins home directory: /var/jenkins_home found at: EnvVars.masterEnvVars.get("JENKINS_HOME")
+jenkins-container | 2022-09-23 11:43:39.939+0000 [id=1] INFO    o.e.j.s.handler.ContextHandler#doStart: Started w.@4d8286c4{Jenkins v2.361.1,/,file:///var/jenkins_home/war/,AVAILABLE}{/var/jenkins_home/war}
+jenkins-container | 2022-09-23 11:43:39.952+0000 [id=1] INFO    o.e.j.server.AbstractConnector#doStart: Started ServerConnector@e84a8e1{HTTP/1.1, (http/1.1)}{0.0.0.0:8080}
+jenkins-container | 2022-09-23 11:43:39.965+0000 [id=1] INFO    org.eclipse.jetty.server.Server#doStart: Started Server@32c8e539{STARTING}[10.0.11,sto=0] @1386ms
+jenkins-container | 2022-09-23 11:43:39.968+0000 [id=35]        INFO    winstone.Logger#logInternal: Winstone Servlet Engine running: controlPort=disabled
+jenkins-container | 2022-09-23 11:43:40.136+0000 [id=42]        INFO    jenkins.InitReactorRunner$1#onAttained: Started initialization
+jenkins-container | 2022-09-23 11:43:40.151+0000 [id=61]        INFO    jenkins.InitReactorRunner$1#onAttained: Listed all plugins
+jenkins-container | 2022-09-23 11:43:40.608+0000 [id=70]        INFO    jenkins.InitReactorRunner$1#onAttained: Prepared all plugins
+jenkins-container | 2022-09-23 11:43:40.612+0000 [id=40]        INFO    jenkins.InitReactorRunner$1#onAttained: Started all plugins
+jenkins-container | 2022-09-23 11:43:40.615+0000 [id=55]        INFO    jenkins.InitReactorRunner$1#onAttained: Augmented all extensions
+jenkins-container | 2022-09-23 11:43:40.748+0000 [id=57]        INFO    jenkins.InitReactorRunner$1#onAttained: System config loaded
+jenkins-container | 2022-09-23 11:43:40.749+0000 [id=57]        INFO    jenkins.InitReactorRunner$1#onAttained: System config adapted
+jenkins-container | 2022-09-23 11:43:40.750+0000 [id=53]        INFO    jenkins.InitReactorRunner$1#onAttained: Loaded all jobs
+jenkins-container | 2022-09-23 11:43:40.752+0000 [id=47]        INFO    jenkins.InitReactorRunner$1#onAttained: Configuration for all jobs updated
+jenkins-container | 2022-09-23 11:43:40.764+0000 [id=84]        INFO    hudson.model.AsyncPeriodicWork#lambda$doRun$1: Started Download metadata
+jenkins-container | 2022-09-23 11:43:40.771+0000 [id=84]        INFO    hudson.util.Retrier#start: Attempt #1 to do the action check updates server
+jenkins-container | WARNING: An illegal reflective access operation has occurred
+jenkins-container | WARNING: Illegal reflective access by org.codehaus.groovy.vmplugin.v7.Java7$1 (file:/var/jenkins_home/war/WEB-INF/lib/groovy-all-2.4.21.jar) to constructor java.lang.invoke.MethodHandles$Lookup(java.lang.Class,int)
+jenkins-container | WARNING: Please consider reporting this to the maintainers of org.codehaus.groovy.vmplugin.v7.Java7$1
+jenkins-container | WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+jenkins-container | WARNING: All illegal access operations will be denied in a future release
+jenkins-container | 2022-09-23 11:43:40.887+0000 [id=65]        INFO    j.util.groovy.GroovyHookScript#execute: Executing /var/jenkins_home/init.groovy.d/00_plugin.groovy
+jenkins-container | 2022-09-23 11:43:41.033+0000 [id=60]        INFO    jenkins.install.SetupWizard#init:
+jenkins-container |
+jenkins-container | *************************************************************
+jenkins-container | *************************************************************
+jenkins-container | *************************************************************
+jenkins-container |
+jenkins-container | Jenkins initial setup is required. An admin user has been created and a password generated.
+jenkins-container | Please use the following password to proceed to installation:
+jenkins-container |
+jenkins-container | f6788e153850448ca3cecd5aa0eba046
+jenkins-container |
+jenkins-container | This may also be found at: /var/jenkins_home/secrets/initialAdminPassword
+jenkins-container |
+jenkins-container | *************************************************************
+jenkins-container | *************************************************************
+jenkins-container | *************************************************************
+jenkins-container |
+jenkins-container | 2022-09-23 11:44:01.060+0000 [id=84]        INFO    hudson.util.Retrier#start: The attempt #1 to do the action check updates server failed with an allowed exception:
+jenkins-container | java.net.SocketTimeoutException: connect timed out
+jenkins-container |     at java.base/java.net.PlainSocketImpl.socketConnect(Native Method)
+jenkins-container |     at java.base/java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:412)
+jenkins-container |     at java.base/java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:255)
+jenkins-container |     at java.base/java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:237)
+jenkins-container |     at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+jenkins-container |     at java.base/java.net.Socket.connect(Socket.java:609)
+jenkins-container |     at java.base/sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:305)
+jenkins-container |     at java.base/sun.net.NetworkClient.doConnect(NetworkClient.java:177)
+jenkins-container |     at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:508)
+jenkins-container |     at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:603)
+jenkins-container |     at java.base/sun.net.www.protocol.https.HttpsClient.<init>(HttpsClient.java:266)
+jenkins-container |     at java.base/sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:373)
+jenkins-container |     at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:207)
+jenkins-container |     at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1187)
+jenkins-container |     at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1081)
+jenkins-container |     at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:193)
+jenkins-container |     at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1592)
+jenkins-container |     at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1520)
+jenkins-container |     at java.base/sun.net.www.protocol.https.HttpsURLConnectionImpl.getInputStream(HttpsURLConnectionImpl.java:250)
+jenkins-container |     at hudson.model.DownloadService.loadJSON(DownloadService.java:122)
+jenkins-container |     at hudson.model.UpdateSite.updateDirectlyNow(UpdateSite.java:219)
+jenkins-container |     at hudson.model.UpdateSite.updateDirectlyNow(UpdateSite.java:214)
+jenkins-container |     at hudson.PluginManager.checkUpdatesServer(PluginManager.java:1951)
+jenkins-container |     at hudson.util.Retrier.start(Retrier.java:62)
+jenkins-container |     at hudson.PluginManager.doCheckUpdatesServer(PluginManager.java:1922)
+jenkins-container |     at jenkins.DailyCheck.execute(DailyCheck.java:93)
+jenkins-container |     at hudson.model.AsyncPeriodicWork.lambda$doRun$1(AsyncPeriodicWork.java:102)
+jenkins-container |     at java.base/java.lang.Thread.run(Thread.java:829)
+jenkins-container | 2022-09-23 11:44:01.062+0000 [id=84]        INFO    hudson.util.Retrier#start: Calling the listener of the allowed exception 'connect timed out' at the attempt #1 to do the action check updates server
+jenkins-container | 2022-09-23 11:44:01.064+0000 [id=84]        INFO    hudson.util.Retrier#start: Attempted the action check updates server for 1 time(s) with no success
+jenkins-container | 2022-09-23 11:44:01.066+0000 [id=84]        SEVERE  hudson.PluginManager#doCheckUpdatesServer: Error checking update sites for 1 attempt(s). Last exception was: SocketTimeoutException: connect timed out
+jenkins-container | 2022-09-23 11:44:01.068+0000 [id=84]        INFO    hudson.model.AsyncPeriodicWork#lambda$doRun$1: Finished Download metadata. 20,302 ms
+jenkins-container | 2022-09-23 11:44:01.184+0000 [id=60]        WARNING hudson.model.UpdateCenter#updateDefaultSite: Upgrading Jenkins. Failed to update the default Update Site 'default'. Plugin upgrades may fail.
+jenkins-container | java.net.SocketTimeoutException: connect timed out
+jenkins-container |     at java.base/java.net.PlainSocketImpl.socketConnect(Native Method)
+jenkins-container |     at java.base/java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:412)
+jenkins-container |     at java.base/java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:255)
+jenkins-container |     at java.base/java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:237)
+jenkins-container |     at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+jenkins-container |     at java.base/java.net.Socket.connect(Socket.java:609)
+jenkins-container |     at java.base/sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:305)
+jenkins-container |     at java.base/sun.net.NetworkClient.doConnect(NetworkClient.java:177)
+jenkins-container |     at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:508)
+jenkins-container |     at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:603)
+jenkins-container |     at java.base/sun.net.www.protocol.https.HttpsClient.<init>(HttpsClient.java:266)
+jenkins-container |     at java.base/sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:373)
+jenkins-container |     at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:207)
+jenkins-container |     at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1187)
+jenkins-container |     at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1081)
+jenkins-container |     at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:193)
+jenkins-container |     at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1592)
+jenkins-container |     at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1520)
+jenkins-container |     at java.base/sun.net.www.protocol.https.HttpsURLConnectionImpl.getInputStream(HttpsURLConnectionImpl.java:250)
+jenkins-container |     at hudson.model.DownloadService.loadJSON(DownloadService.java:122)
+jenkins-container |     at hudson.model.UpdateSite.updateDirectlyNow(UpdateSite.java:219)
+jenkins-container |     at hudson.model.UpdateSite.updateDirectlyNow(UpdateSite.java:214)
+jenkins-container |     at hudson.model.UpdateCenter.updateDefaultSite(UpdateCenter.java:2672)
+jenkins-container |     at jenkins.install.SetupWizard.init(SetupWizard.java:209)
+jenkins-container |     at jenkins.install.InstallState$InitialSecuritySetup.initializeState(InstallState.java:182)
+jenkins-container |     at jenkins.model.Jenkins.setInstallState(Jenkins.java:1133)
+jenkins-container |     at jenkins.install.InstallUtil.proceedToNextStateFrom(InstallUtil.java:99)
+jenkins-container |     at jenkins.install.InstallState$Unknown.initializeState(InstallState.java:88)
+jenkins-container |     at jenkins.model.Jenkins$15.run(Jenkins.java:3499)
+jenkins-container |     at org.jvnet.hudson.reactor.TaskGraphBuilder$TaskImpl.run(TaskGraphBuilder.java:175)
+jenkins-container |     at org.jvnet.hudson.reactor.Reactor.runTask(Reactor.java:305)
+jenkins-container |     at jenkins.model.Jenkins$5.runTask(Jenkins.java:1160)
+jenkins-container |     at org.jvnet.hudson.reactor.Reactor$2.run(Reactor.java:222)
+jenkins-container |     at org.jvnet.hudson.reactor.Reactor$Node.run(Reactor.java:121)
+jenkins-container |     at jenkins.security.ImpersonatingExecutorService$1.run(ImpersonatingExecutorService.java:70)
+jenkins-container |     at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+jenkins-container |     at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+jenkins-container |     at java.base/java.lang.Thread.run(Thread.java:829)
+jenkins-container | 2022-09-23 11:44:01.246+0000 [id=65]        SEVERE  jenkins.InitReactorRunner$1#onTaskFailed: Failed GroovyInitScript.init
+jenkins-container | java.net.SocketTimeoutException: connect timed out
+jenkins-container |     at java.base/java.net.PlainSocketImpl.socketConnect(Native Method)
+jenkins-container |     at java.base/java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:412)
+jenkins-container |     at java.base/java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:255)
+jenkins-container |     at java.base/java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:237)
+jenkins-container |     at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+jenkins-container |     at java.base/java.net.Socket.connect(Socket.java:609)
+jenkins-container |     at java.base/sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:305)
+jenkins-container |     at java.base/sun.net.NetworkClient.doConnect(NetworkClient.java:177)
+jenkins-container |     at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:508)
+jenkins-container |     at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:603)
+jenkins-container |     at java.base/sun.net.www.protocol.https.HttpsClient.<init>(HttpsClient.java:266)
+jenkins-container |     at java.base/sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:373)
+jenkins-container |     at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:207)
+jenkins-container |     at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1187)
+jenkins-container |     at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1081)
+jenkins-container |     at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:193)
+jenkins-container |     at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1592)
+jenkins-container |     at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1520)
+jenkins-container |     at java.base/sun.net.www.protocol.https.HttpsURLConnectionImpl.getInputStream(HttpsURLConnectionImpl.java:250)
+jenkins-container |     at hudson.model.DownloadService.loadJSON(DownloadService.java:122)
+jenkins-container |     at hudson.model.UpdateSite.updateDirectlyNow(UpdateSite.java:219)
+jenkins-container |     at hudson.model.UpdateSite$1.call(UpdateSite.java:199)
+jenkins-container |     at hudson.model.UpdateSite$1.call(UpdateSite.java:197)
+jenkins-container |     at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+jenkins-container | Caused: java.util.concurrent.ExecutionException
+jenkins-container |     at java.base/java.util.concurrent.FutureTask.report(FutureTask.java:122)
+jenkins-container |     at java.base/java.util.concurrent.FutureTask.get(FutureTask.java:191)
+jenkins-container |     at hudson.model.UpdateCenter.updateAllSites(UpdateCenter.java:1114)
+jenkins-container |     at hudson.model.UpdateCenter$updateAllSites.call(Unknown Source)
+jenkins-container |     at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCall(CallSiteArray.java:47)
+jenkins-container |     at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:116)
+jenkins-container |     at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:120)
+jenkins-container |     at 00_plugin.run(00_plugin.groovy:9)
+jenkins-container |     at groovy.lang.GroovyShell.evaluate(GroovyShell.java:574)
+jenkins-container |     at jenkins.util.groovy.GroovyHookScript.execute(GroovyHookScript.java:136)
+jenkins-container |     at jenkins.util.groovy.GroovyHookScript.execute(GroovyHookScript.java:126)
+jenkins-container |     at jenkins.util.groovy.GroovyHookScript.run(GroovyHookScript.java:109)
+jenkins-container |     at hudson.init.impl.GroovyInitScript.init(GroovyInitScript.java:42)
+jenkins-container | Caused: java.lang.reflect.InvocationTargetException
+jenkins-container |     at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+jenkins-container |     at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+jenkins-container |     at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+jenkins-container |     at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+jenkins-container |     at hudson.init.TaskMethodFinder.invoke(TaskMethodFinder.java:109)
+jenkins-container | Caused: java.lang.Error
+jenkins-container |     at hudson.init.TaskMethodFinder.invoke(TaskMethodFinder.java:115)
+jenkins-container |     at hudson.init.TaskMethodFinder$TaskImpl.run(TaskMethodFinder.java:185)
+jenkins-container |     at org.jvnet.hudson.reactor.Reactor.runTask(Reactor.java:305)
+jenkins-container |     at jenkins.model.Jenkins$5.runTask(Jenkins.java:1160)
+jenkins-container |     at org.jvnet.hudson.reactor.Reactor$2.run(Reactor.java:222)
+jenkins-container |     at org.jvnet.hudson.reactor.Reactor$Node.run(Reactor.java:121)
+jenkins-container |     at jenkins.security.ImpersonatingExecutorService$1.run(ImpersonatingExecutorService.java:70)
+jenkins-container |     at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+jenkins-container |     at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+jenkins-container |     at java.base/java.lang.Thread.run(Thread.java:829)
+jenkins-container | 2022-09-23 11:44:01.248+0000 [id=32]        SEVERE  hudson.util.BootFailure#publish: Failed to initialize Jenkins
+jenkins-container | java.net.SocketTimeoutException: connect timed out
+jenkins-container |     at java.base/java.net.PlainSocketImpl.socketConnect(Native Method)
+jenkins-container |     at java.base/java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:412)
+jenkins-container |     at java.base/java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:255)
+jenkins-container |     at java.base/java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:237)
+jenkins-container |     at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+jenkins-container |     at java.base/java.net.Socket.connect(Socket.java:609)
+jenkins-container |     at java.base/sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:305)
+jenkins-container |     at java.base/sun.net.NetworkClient.doConnect(NetworkClient.java:177)
+jenkins-container |     at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:508)
+jenkins-container |     at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:603)
+jenkins-container |     at java.base/sun.net.www.protocol.https.HttpsClient.<init>(HttpsClient.java:266)
+jenkins-container |     at java.base/sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:373)
+jenkins-container |     at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:207)
+jenkins-container |     at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1187)
+jenkins-container |     at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1081)
+jenkins-container |     at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:193)
+jenkins-container |     at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1592)
+jenkins-container |     at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1520)
+jenkins-container |     at java.base/sun.net.www.protocol.https.HttpsURLConnectionImpl.getInputStream(HttpsURLConnectionImpl.java:250)
+jenkins-container |     at hudson.model.DownloadService.loadJSON(DownloadService.java:122)
+jenkins-container |     at hudson.model.UpdateSite.updateDirectlyNow(UpdateSite.java:219)
+jenkins-container |     at hudson.model.UpdateSite$1.call(UpdateSite.java:199)
+jenkins-container |     at hudson.model.UpdateSite$1.call(UpdateSite.java:197)
+jenkins-container |     at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+jenkins-container | Caused: java.util.concurrent.ExecutionException
+jenkins-container |     at java.base/java.util.concurrent.FutureTask.report(FutureTask.java:122)
+jenkins-container |     at java.base/java.util.concurrent.FutureTask.get(FutureTask.java:191)
+jenkins-container |     at hudson.model.UpdateCenter.updateAllSites(UpdateCenter.java:1114)
+jenkins-container |     at hudson.model.UpdateCenter$updateAllSites.call(Unknown Source)
+jenkins-container |     at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCall(CallSiteArray.java:47)
+jenkins-container |     at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:116)
+jenkins-container |     at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:120)
+jenkins-container |     at 00_plugin.run(00_plugin.groovy:9)
+jenkins-container |     at groovy.lang.GroovyShell.evaluate(GroovyShell.java:574)
+jenkins-container |     at jenkins.util.groovy.GroovyHookScript.execute(GroovyHookScript.java:136)
+jenkins-container |     at jenkins.util.groovy.GroovyHookScript.execute(GroovyHookScript.java:126)
+jenkins-container |     at jenkins.util.groovy.GroovyHookScript.run(GroovyHookScript.java:109)
+jenkins-container |     at hudson.init.impl.GroovyInitScript.init(GroovyInitScript.java:42)
+jenkins-container | Caused: java.lang.reflect.InvocationTargetException
+jenkins-container |     at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+jenkins-container |     at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+jenkins-container |     at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+jenkins-container |     at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+jenkins-container |     at hudson.init.TaskMethodFinder.invoke(TaskMethodFinder.java:109)
+jenkins-container | Caused: java.lang.Error
+jenkins-container |     at hudson.init.TaskMethodFinder.invoke(TaskMethodFinder.java:115)
+jenkins-container |     at hudson.init.TaskMethodFinder$TaskImpl.run(TaskMethodFinder.java:185)
+jenkins-container |     at org.jvnet.hudson.reactor.Reactor.runTask(Reactor.java:305)
+jenkins-container |     at jenkins.model.Jenkins$5.runTask(Jenkins.java:1160)
+jenkins-container |     at org.jvnet.hudson.reactor.Reactor$2.run(Reactor.java:222)
+jenkins-container |     at org.jvnet.hudson.reactor.Reactor$Node.run(Reactor.java:121)
+jenkins-container |     at jenkins.security.ImpersonatingExecutorService$1.run(ImpersonatingExecutorService.java:70)
+jenkins-container |     at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+jenkins-container |     at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+jenkins-container |     at java.base/java.lang.Thread.run(Thread.java:829)
+jenkins-container | Caused: org.jvnet.hudson.reactor.ReactorException
+jenkins-container |     at org.jvnet.hudson.reactor.Reactor.execute(Reactor.java:291)
+jenkins-container |     at jenkins.InitReactorRunner.run(InitReactorRunner.java:49)
+jenkins-container |     at jenkins.model.Jenkins.executeReactor(Jenkins.java:1195)
+jenkins-container |     at jenkins.model.Jenkins.<init>(Jenkins.java:985)
+jenkins-container |     at hudson.model.Hudson.<init>(Hudson.java:86)
+jenkins-container |     at hudson.model.Hudson.<init>(Hudson.java:82)
+jenkins-container |     at hudson.WebAppMain$3.run(WebAppMain.java:247)
+jenkins-container | Caused: hudson.util.HudsonFailedToLoad
+jenkins-container |     at hudson.WebAppMain$3.run(WebAppMain.java:264)
+jenkins-container | 2022-09-23 11:44:01.254+0000 [id=32]        INFO    hudson.lifecycle.Lifecycle#onStatusUpdate: Stopping Jenkins
+jenkins-container | 2022-09-23 11:44:01.257+0000 [id=32]        INFO    jenkins.model.Jenkins$16#onAttained: Started termination
+jenkins-container | 2022-09-23 11:44:01.263+0000 [id=32]        INFO    jenkins.model.Jenkins$16#onAttained: Completed termination
+jenkins-container | 2022-09-23 11:44:01.263+0000 [id=32]        INFO    jenkins.model.Jenkins#_cleanUpDisconnectComputers: Starting node disconnection
+jenkins-container | 2022-09-23 11:44:01.284+0000 [id=92]        WARNING h.ExtensionFinder$GuiceFinder$FaultTolerantScope$1#error: Failed to instantiate Key[type=jenkins.slaves.JnlpSlaveAgentProtocol4, annotation=[none]]; skipping this component
+jenkins-container | java.security.KeyStoreException: JENKINS-41987: no X509Certificate found; perhaps instance-identity plugin is not installed
+jenkins-container |     at jenkins.slaves.JnlpSlaveAgentProtocol4.<init>(JnlpSlaveAgentProtocol4.java:106)
+jenkins-container |     at jenkins.slaves.JnlpSlaveAgentProtocol4$$FastClassByGuice$$308450093.GUICE$TRAMPOLINE(<generated>)
+jenkins-container |     at jenkins.slaves.JnlpSlaveAgentProtocol4$$FastClassByGuice$$308450093.apply(<generated>)
+jenkins-container |     at com.google.inject.internal.DefaultConstructionProxyFactory$FastClassProxy.newInstance(DefaultConstructionProxyFactory.java:82)
+jenkins-container |     at com.google.inject.internal.ConstructorInjector.provision(ConstructorInjector.java:114)
+jenkins-container |     at com.google.inject.internal.ConstructorInjector.access$000(ConstructorInjector.java:33)
+jenkins-container |     at com.google.inject.internal.ConstructorInjector$1.call(ConstructorInjector.java:98)
+jenkins-container |     at com.google.inject.internal.ProvisionListenerStackCallback$Provision.provision(ProvisionListenerStackCallback.java:109)
+jenkins-container |     at hudson.ExtensionFinder$GuiceFinder$SezpozModule.onProvision(ExtensionFinder.java:568)
+jenkins-container |     at com.google.inject.internal.ProvisionListenerStackCallback$Provision.provision(ProvisionListenerStackCallback.java:117)
+jenkins-container |     at com.google.inject.internal.ProvisionListenerStackCallback.provision(ProvisionListenerStackCallback.java:66)
+jenkins-container |     at com.google.inject.internal.ConstructorInjector.construct(ConstructorInjector.java:93)
+jenkins-container |     at com.google.inject.internal.ConstructorBindingImpl$Factory.get(ConstructorBindingImpl.java:296)
+jenkins-container |     at com.google.inject.internal.ProviderToInternalFactoryAdapter.get(ProviderToInternalFactoryAdapter.java:40)
+jenkins-container | Caused: com.google.inject.ProvisionException: Unable to provision, see the following errors:
+jenkins-container |
+jenkins-container | 1) [Guice/ErrorInjectingConstructor]: KeyStoreException: JENKINS-41987: no X509Certificate found; perhaps instance-identity plugin is not installed
+jenkins-container |   at JnlpSlaveAgentProtocol4.<init>(JnlpSlaveAgentProtocol4.java:102)
+jenkins-container |
+jenkins-container | Learn more:
+jenkins-container |   https://github.com/google/guice/wiki/ERROR_INJECTING_CONSTRUCTOR
+jenkins-container |
+jenkins-container | 1 error
+jenkins-container |
+jenkins-container | ======================
+jenkins-container | Full classname legend:
+jenkins-container | ======================
+jenkins-container | JnlpSlaveAgentProtocol4: "jenkins.slaves.JnlpSlaveAgentProtocol4"
+jenkins-container | KeyStoreException:       "java.security.KeyStoreException"
+jenkins-container | ========================
+jenkins-container | End of classname legend:
+jenkins-container | ========================
+jenkins-container |
+jenkins-container |     at com.google.inject.internal.InternalProvisionException.toProvisionException(InternalProvisionException.java:251)
+jenkins-container |     at com.google.inject.internal.ProviderToInternalFactoryAdapter.get(ProviderToInternalFactoryAdapter.java:43)
+jenkins-container |     at com.google.inject.internal.SingletonScope$1.get(SingletonScope.java:169)
+jenkins-container |     at hudson.ExtensionFinder$GuiceFinder$FaultTolerantScope$1.get(ExtensionFinder.java:444)
+jenkins-container |     at com.google.inject.internal.InternalFactoryToProviderAdapter.get(InternalFactoryToProviderAdapter.java:45)
+jenkins-container |     at com.google.inject.internal.InjectorImpl$1.get(InjectorImpl.java:1100)
+jenkins-container |     at hudson.ExtensionFinder$GuiceFinder._find(ExtensionFinder.java:402)
+jenkins-container |     at hudson.ExtensionFinder$GuiceFinder.find(ExtensionFinder.java:393)
+jenkins-container |     at hudson.ClassicPluginStrategy.findComponents(ClassicPluginStrategy.java:359)
+jenkins-container |     at hudson.ExtensionList.load(ExtensionList.java:384)
+jenkins-container |     at hudson.ExtensionList.ensureLoaded(ExtensionList.java:320)
+jenkins-container |     at hudson.ExtensionList.iterator(ExtensionList.java:172)
+jenkins-container |     at jenkins.AgentProtocol.of(AgentProtocol.java:111)
+jenkins-container |     at hudson.TcpSlaveAgentListener$ConnectionHandler.run(TcpSlaveAgentListener.java:277)
+jenkins-container | 2022-09-23 11:44:01.305+0000 [id=32]        INFO    jenkins.model.Jenkins#_cleanUpShutdownPluginManager: Stopping plugin manager
+jenkins-container | 2022-09-23 11:44:01.305+0000 [id=32]        INFO    jenkins.model.Jenkins#_cleanUpPersistQueue: Persisting build queue
+jenkins-container | 2022-09-23 11:44:01.312+0000 [id=32]        INFO    jenkins.model.Jenkins#_cleanUpAwaitDisconnects: Waiting for node disconnection completion
+jenkins-container | 2022-09-23 11:44:01.313+0000 [id=32]        INFO    hudson.lifecycle.Lifecycle#onStatusUpdate: Jenkins stopped
+```
+
+::::
+
 ## 🤔Q-02. Jenkin インスタンスの取得方法
 
 Jenkin インスタンスを取得する際に、稀に古い記事で使われている `jenkins.model.Jenkins.getInstance()` は Deprecated です。
