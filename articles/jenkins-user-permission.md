@@ -653,313 +653,7 @@ https://github.com/jenkinsci/docker/blob/master/17/debian/bullseye/hotspot/Docke
 
 - 初期設定ではエラーが出るので使えない場合がありました。
 
-::::details ログ
-
-```bash
-jenkins-container | Running from: /usr/share/jenkins/jenkins.war
-jenkins-container | webroot: EnvVars.masterEnvVars.get("JENKINS_HOME")
-jenkins-container | 2022-09-23 11:43:38.899+0000 [id=1] INFO    winstone.Logger#logInternal: Beginning extraction from war file
-jenkins-container | 2022-09-23 11:43:39.360+0000 [id=1] WARNING o.e.j.s.handler.ContextHandler#setContextPath: Empty contextPath
-jenkins-container | 2022-09-23 11:43:39.398+0000 [id=1] INFO    org.eclipse.jetty.server.Server#doStart: jetty-10.0.11; built: 2022-06-21T21:12:44.640Z; git: d988aa016e0bb2de6fba84c1659049c72eae3e32; jvm 11.0.16.1+1
-jenkins-container | 2022-09-23 11:43:39.558+0000 [id=1] INFO    o.e.j.w.StandardDescriptorProcessor#visitServlet: NO JSP Support for /, did not find org.eclipse.jetty.jsp.JettyJspServlet
-jenkins-container | 2022-09-23 11:43:39.591+0000 [id=1] INFO    o.e.j.s.s.DefaultSessionIdManager#doStart: Session workerName=node0
-jenkins-container | 2022-09-23 11:43:39.834+0000 [id=1] INFO    hudson.WebAppMain#contextInitialized: Jenkins home directory: /var/jenkins_home found at: EnvVars.masterEnvVars.get("JENKINS_HOME")
-jenkins-container | 2022-09-23 11:43:39.939+0000 [id=1] INFO    o.e.j.s.handler.ContextHandler#doStart: Started w.@4d8286c4{Jenkins v2.361.1,/,file:///var/jenkins_home/war/,AVAILABLE}{/var/jenkins_home/war}
-jenkins-container | 2022-09-23 11:43:39.952+0000 [id=1] INFO    o.e.j.server.AbstractConnector#doStart: Started ServerConnector@e84a8e1{HTTP/1.1, (http/1.1)}{0.0.0.0:8080}
-jenkins-container | 2022-09-23 11:43:39.965+0000 [id=1] INFO    org.eclipse.jetty.server.Server#doStart: Started Server@32c8e539{STARTING}[10.0.11,sto=0] @1386ms
-jenkins-container | 2022-09-23 11:43:39.968+0000 [id=35]        INFO    winstone.Logger#logInternal: Winstone Servlet Engine running: controlPort=disabled
-jenkins-container | 2022-09-23 11:43:40.136+0000 [id=42]        INFO    jenkins.InitReactorRunner$1#onAttained: Started initialization
-jenkins-container | 2022-09-23 11:43:40.151+0000 [id=61]        INFO    jenkins.InitReactorRunner$1#onAttained: Listed all plugins
-jenkins-container | 2022-09-23 11:43:40.608+0000 [id=70]        INFO    jenkins.InitReactorRunner$1#onAttained: Prepared all plugins
-jenkins-container | 2022-09-23 11:43:40.612+0000 [id=40]        INFO    jenkins.InitReactorRunner$1#onAttained: Started all plugins
-jenkins-container | 2022-09-23 11:43:40.615+0000 [id=55]        INFO    jenkins.InitReactorRunner$1#onAttained: Augmented all extensions
-jenkins-container | 2022-09-23 11:43:40.748+0000 [id=57]        INFO    jenkins.InitReactorRunner$1#onAttained: System config loaded
-jenkins-container | 2022-09-23 11:43:40.749+0000 [id=57]        INFO    jenkins.InitReactorRunner$1#onAttained: System config adapted
-jenkins-container | 2022-09-23 11:43:40.750+0000 [id=53]        INFO    jenkins.InitReactorRunner$1#onAttained: Loaded all jobs
-jenkins-container | 2022-09-23 11:43:40.752+0000 [id=47]        INFO    jenkins.InitReactorRunner$1#onAttained: Configuration for all jobs updated
-jenkins-container | 2022-09-23 11:43:40.764+0000 [id=84]        INFO    hudson.model.AsyncPeriodicWork#lambda$doRun$1: Started Download metadata
-jenkins-container | 2022-09-23 11:43:40.771+0000 [id=84]        INFO    hudson.util.Retrier#start: Attempt #1 to do the action check updates server
-jenkins-container | WARNING: An illegal reflective access operation has occurred
-jenkins-container | WARNING: Illegal reflective access by org.codehaus.groovy.vmplugin.v7.Java7$1 (file:/var/jenkins_home/war/WEB-INF/lib/groovy-all-2.4.21.jar) to constructor java.lang.invoke.MethodHandles$Lookup(java.lang.Class,int)
-jenkins-container | WARNING: Please consider reporting this to the maintainers of org.codehaus.groovy.vmplugin.v7.Java7$1
-jenkins-container | WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
-jenkins-container | WARNING: All illegal access operations will be denied in a future release
-jenkins-container | 2022-09-23 11:43:40.887+0000 [id=65]        INFO    j.util.groovy.GroovyHookScript#execute: Executing /var/jenkins_home/init.groovy.d/00_plugin.groovy
-jenkins-container | 2022-09-23 11:43:41.033+0000 [id=60]        INFO    jenkins.install.SetupWizard#init:
-jenkins-container |
-jenkins-container | *************************************************************
-jenkins-container | *************************************************************
-jenkins-container | *************************************************************
-jenkins-container |
-jenkins-container | Jenkins initial setup is required. An admin user has been created and a password generated.
-jenkins-container | Please use the following password to proceed to installation:
-jenkins-container |
-jenkins-container | f6788e153850448ca3cecd5aa0eba046
-jenkins-container |
-jenkins-container | This may also be found at: /var/jenkins_home/secrets/initialAdminPassword
-jenkins-container |
-jenkins-container | *************************************************************
-jenkins-container | *************************************************************
-jenkins-container | *************************************************************
-jenkins-container |
-jenkins-container | 2022-09-23 11:44:01.060+0000 [id=84]        INFO    hudson.util.Retrier#start: The attempt #1 to do the action check updates server failed with an allowed exception:
-jenkins-container | java.net.SocketTimeoutException: connect timed out
-jenkins-container |     at java.base/java.net.PlainSocketImpl.socketConnect(Native Method)
-jenkins-container |     at java.base/java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:412)
-jenkins-container |     at java.base/java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:255)
-jenkins-container |     at java.base/java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:237)
-jenkins-container |     at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
-jenkins-container |     at java.base/java.net.Socket.connect(Socket.java:609)
-jenkins-container |     at java.base/sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:305)
-jenkins-container |     at java.base/sun.net.NetworkClient.doConnect(NetworkClient.java:177)
-jenkins-container |     at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:508)
-jenkins-container |     at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:603)
-jenkins-container |     at java.base/sun.net.www.protocol.https.HttpsClient.<init>(HttpsClient.java:266)
-jenkins-container |     at java.base/sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:373)
-jenkins-container |     at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:207)
-jenkins-container |     at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1187)
-jenkins-container |     at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1081)
-jenkins-container |     at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:193)
-jenkins-container |     at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1592)
-jenkins-container |     at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1520)
-jenkins-container |     at java.base/sun.net.www.protocol.https.HttpsURLConnectionImpl.getInputStream(HttpsURLConnectionImpl.java:250)
-jenkins-container |     at hudson.model.DownloadService.loadJSON(DownloadService.java:122)
-jenkins-container |     at hudson.model.UpdateSite.updateDirectlyNow(UpdateSite.java:219)
-jenkins-container |     at hudson.model.UpdateSite.updateDirectlyNow(UpdateSite.java:214)
-jenkins-container |     at hudson.PluginManager.checkUpdatesServer(PluginManager.java:1951)
-jenkins-container |     at hudson.util.Retrier.start(Retrier.java:62)
-jenkins-container |     at hudson.PluginManager.doCheckUpdatesServer(PluginManager.java:1922)
-jenkins-container |     at jenkins.DailyCheck.execute(DailyCheck.java:93)
-jenkins-container |     at hudson.model.AsyncPeriodicWork.lambda$doRun$1(AsyncPeriodicWork.java:102)
-jenkins-container |     at java.base/java.lang.Thread.run(Thread.java:829)
-jenkins-container | 2022-09-23 11:44:01.062+0000 [id=84]        INFO    hudson.util.Retrier#start: Calling the listener of the allowed exception 'connect timed out' at the attempt #1 to do the action check updates server
-jenkins-container | 2022-09-23 11:44:01.064+0000 [id=84]        INFO    hudson.util.Retrier#start: Attempted the action check updates server for 1 time(s) with no success
-jenkins-container | 2022-09-23 11:44:01.066+0000 [id=84]        SEVERE  hudson.PluginManager#doCheckUpdatesServer: Error checking update sites for 1 attempt(s). Last exception was: SocketTimeoutException: connect timed out
-jenkins-container | 2022-09-23 11:44:01.068+0000 [id=84]        INFO    hudson.model.AsyncPeriodicWork#lambda$doRun$1: Finished Download metadata. 20,302 ms
-jenkins-container | 2022-09-23 11:44:01.184+0000 [id=60]        WARNING hudson.model.UpdateCenter#updateDefaultSite: Upgrading Jenkins. Failed to update the default Update Site 'default'. Plugin upgrades may fail.
-jenkins-container | java.net.SocketTimeoutException: connect timed out
-jenkins-container |     at java.base/java.net.PlainSocketImpl.socketConnect(Native Method)
-jenkins-container |     at java.base/java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:412)
-jenkins-container |     at java.base/java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:255)
-jenkins-container |     at java.base/java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:237)
-jenkins-container |     at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
-jenkins-container |     at java.base/java.net.Socket.connect(Socket.java:609)
-jenkins-container |     at java.base/sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:305)
-jenkins-container |     at java.base/sun.net.NetworkClient.doConnect(NetworkClient.java:177)
-jenkins-container |     at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:508)
-jenkins-container |     at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:603)
-jenkins-container |     at java.base/sun.net.www.protocol.https.HttpsClient.<init>(HttpsClient.java:266)
-jenkins-container |     at java.base/sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:373)
-jenkins-container |     at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:207)
-jenkins-container |     at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1187)
-jenkins-container |     at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1081)
-jenkins-container |     at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:193)
-jenkins-container |     at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1592)
-jenkins-container |     at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1520)
-jenkins-container |     at java.base/sun.net.www.protocol.https.HttpsURLConnectionImpl.getInputStream(HttpsURLConnectionImpl.java:250)
-jenkins-container |     at hudson.model.DownloadService.loadJSON(DownloadService.java:122)
-jenkins-container |     at hudson.model.UpdateSite.updateDirectlyNow(UpdateSite.java:219)
-jenkins-container |     at hudson.model.UpdateSite.updateDirectlyNow(UpdateSite.java:214)
-jenkins-container |     at hudson.model.UpdateCenter.updateDefaultSite(UpdateCenter.java:2672)
-jenkins-container |     at jenkins.install.SetupWizard.init(SetupWizard.java:209)
-jenkins-container |     at jenkins.install.InstallState$InitialSecuritySetup.initializeState(InstallState.java:182)
-jenkins-container |     at jenkins.model.Jenkins.setInstallState(Jenkins.java:1133)
-jenkins-container |     at jenkins.install.InstallUtil.proceedToNextStateFrom(InstallUtil.java:99)
-jenkins-container |     at jenkins.install.InstallState$Unknown.initializeState(InstallState.java:88)
-jenkins-container |     at jenkins.model.Jenkins$15.run(Jenkins.java:3499)
-jenkins-container |     at org.jvnet.hudson.reactor.TaskGraphBuilder$TaskImpl.run(TaskGraphBuilder.java:175)
-jenkins-container |     at org.jvnet.hudson.reactor.Reactor.runTask(Reactor.java:305)
-jenkins-container |     at jenkins.model.Jenkins$5.runTask(Jenkins.java:1160)
-jenkins-container |     at org.jvnet.hudson.reactor.Reactor$2.run(Reactor.java:222)
-jenkins-container |     at org.jvnet.hudson.reactor.Reactor$Node.run(Reactor.java:121)
-jenkins-container |     at jenkins.security.ImpersonatingExecutorService$1.run(ImpersonatingExecutorService.java:70)
-jenkins-container |     at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
-jenkins-container |     at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
-jenkins-container |     at java.base/java.lang.Thread.run(Thread.java:829)
-jenkins-container | 2022-09-23 11:44:01.246+0000 [id=65]        SEVERE  jenkins.InitReactorRunner$1#onTaskFailed: Failed GroovyInitScript.init
-jenkins-container | java.net.SocketTimeoutException: connect timed out
-jenkins-container |     at java.base/java.net.PlainSocketImpl.socketConnect(Native Method)
-jenkins-container |     at java.base/java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:412)
-jenkins-container |     at java.base/java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:255)
-jenkins-container |     at java.base/java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:237)
-jenkins-container |     at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
-jenkins-container |     at java.base/java.net.Socket.connect(Socket.java:609)
-jenkins-container |     at java.base/sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:305)
-jenkins-container |     at java.base/sun.net.NetworkClient.doConnect(NetworkClient.java:177)
-jenkins-container |     at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:508)
-jenkins-container |     at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:603)
-jenkins-container |     at java.base/sun.net.www.protocol.https.HttpsClient.<init>(HttpsClient.java:266)
-jenkins-container |     at java.base/sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:373)
-jenkins-container |     at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:207)
-jenkins-container |     at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1187)
-jenkins-container |     at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1081)
-jenkins-container |     at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:193)
-jenkins-container |     at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1592)
-jenkins-container |     at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1520)
-jenkins-container |     at java.base/sun.net.www.protocol.https.HttpsURLConnectionImpl.getInputStream(HttpsURLConnectionImpl.java:250)
-jenkins-container |     at hudson.model.DownloadService.loadJSON(DownloadService.java:122)
-jenkins-container |     at hudson.model.UpdateSite.updateDirectlyNow(UpdateSite.java:219)
-jenkins-container |     at hudson.model.UpdateSite$1.call(UpdateSite.java:199)
-jenkins-container |     at hudson.model.UpdateSite$1.call(UpdateSite.java:197)
-jenkins-container |     at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
-jenkins-container | Caused: java.util.concurrent.ExecutionException
-jenkins-container |     at java.base/java.util.concurrent.FutureTask.report(FutureTask.java:122)
-jenkins-container |     at java.base/java.util.concurrent.FutureTask.get(FutureTask.java:191)
-jenkins-container |     at hudson.model.UpdateCenter.updateAllSites(UpdateCenter.java:1114)
-jenkins-container |     at hudson.model.UpdateCenter$updateAllSites.call(Unknown Source)
-jenkins-container |     at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCall(CallSiteArray.java:47)
-jenkins-container |     at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:116)
-jenkins-container |     at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:120)
-jenkins-container |     at 00_plugin.run(00_plugin.groovy:9)
-jenkins-container |     at groovy.lang.GroovyShell.evaluate(GroovyShell.java:574)
-jenkins-container |     at jenkins.util.groovy.GroovyHookScript.execute(GroovyHookScript.java:136)
-jenkins-container |     at jenkins.util.groovy.GroovyHookScript.execute(GroovyHookScript.java:126)
-jenkins-container |     at jenkins.util.groovy.GroovyHookScript.run(GroovyHookScript.java:109)
-jenkins-container |     at hudson.init.impl.GroovyInitScript.init(GroovyInitScript.java:42)
-jenkins-container | Caused: java.lang.reflect.InvocationTargetException
-jenkins-container |     at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-jenkins-container |     at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
-jenkins-container |     at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-jenkins-container |     at java.base/java.lang.reflect.Method.invoke(Method.java:566)
-jenkins-container |     at hudson.init.TaskMethodFinder.invoke(TaskMethodFinder.java:109)
-jenkins-container | Caused: java.lang.Error
-jenkins-container |     at hudson.init.TaskMethodFinder.invoke(TaskMethodFinder.java:115)
-jenkins-container |     at hudson.init.TaskMethodFinder$TaskImpl.run(TaskMethodFinder.java:185)
-jenkins-container |     at org.jvnet.hudson.reactor.Reactor.runTask(Reactor.java:305)
-jenkins-container |     at jenkins.model.Jenkins$5.runTask(Jenkins.java:1160)
-jenkins-container |     at org.jvnet.hudson.reactor.Reactor$2.run(Reactor.java:222)
-jenkins-container |     at org.jvnet.hudson.reactor.Reactor$Node.run(Reactor.java:121)
-jenkins-container |     at jenkins.security.ImpersonatingExecutorService$1.run(ImpersonatingExecutorService.java:70)
-jenkins-container |     at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
-jenkins-container |     at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
-jenkins-container |     at java.base/java.lang.Thread.run(Thread.java:829)
-jenkins-container | 2022-09-23 11:44:01.248+0000 [id=32]        SEVERE  hudson.util.BootFailure#publish: Failed to initialize Jenkins
-jenkins-container | java.net.SocketTimeoutException: connect timed out
-jenkins-container |     at java.base/java.net.PlainSocketImpl.socketConnect(Native Method)
-jenkins-container |     at java.base/java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:412)
-jenkins-container |     at java.base/java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:255)
-jenkins-container |     at java.base/java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:237)
-jenkins-container |     at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
-jenkins-container |     at java.base/java.net.Socket.connect(Socket.java:609)
-jenkins-container |     at java.base/sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:305)
-jenkins-container |     at java.base/sun.net.NetworkClient.doConnect(NetworkClient.java:177)
-jenkins-container |     at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:508)
-jenkins-container |     at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:603)
-jenkins-container |     at java.base/sun.net.www.protocol.https.HttpsClient.<init>(HttpsClient.java:266)
-jenkins-container |     at java.base/sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:373)
-jenkins-container |     at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:207)
-jenkins-container |     at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1187)
-jenkins-container |     at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1081)
-jenkins-container |     at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:193)
-jenkins-container |     at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1592)
-jenkins-container |     at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1520)
-jenkins-container |     at java.base/sun.net.www.protocol.https.HttpsURLConnectionImpl.getInputStream(HttpsURLConnectionImpl.java:250)
-jenkins-container |     at hudson.model.DownloadService.loadJSON(DownloadService.java:122)
-jenkins-container |     at hudson.model.UpdateSite.updateDirectlyNow(UpdateSite.java:219)
-jenkins-container |     at hudson.model.UpdateSite$1.call(UpdateSite.java:199)
-jenkins-container |     at hudson.model.UpdateSite$1.call(UpdateSite.java:197)
-jenkins-container |     at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
-jenkins-container | Caused: java.util.concurrent.ExecutionException
-jenkins-container |     at java.base/java.util.concurrent.FutureTask.report(FutureTask.java:122)
-jenkins-container |     at java.base/java.util.concurrent.FutureTask.get(FutureTask.java:191)
-jenkins-container |     at hudson.model.UpdateCenter.updateAllSites(UpdateCenter.java:1114)
-jenkins-container |     at hudson.model.UpdateCenter$updateAllSites.call(Unknown Source)
-jenkins-container |     at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCall(CallSiteArray.java:47)
-jenkins-container |     at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:116)
-jenkins-container |     at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:120)
-jenkins-container |     at 00_plugin.run(00_plugin.groovy:9)
-jenkins-container |     at groovy.lang.GroovyShell.evaluate(GroovyShell.java:574)
-jenkins-container |     at jenkins.util.groovy.GroovyHookScript.execute(GroovyHookScript.java:136)
-jenkins-container |     at jenkins.util.groovy.GroovyHookScript.execute(GroovyHookScript.java:126)
-jenkins-container |     at jenkins.util.groovy.GroovyHookScript.run(GroovyHookScript.java:109)
-jenkins-container |     at hudson.init.impl.GroovyInitScript.init(GroovyInitScript.java:42)
-jenkins-container | Caused: java.lang.reflect.InvocationTargetException
-jenkins-container |     at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-jenkins-container |     at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
-jenkins-container |     at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-jenkins-container |     at java.base/java.lang.reflect.Method.invoke(Method.java:566)
-jenkins-container |     at hudson.init.TaskMethodFinder.invoke(TaskMethodFinder.java:109)
-jenkins-container | Caused: java.lang.Error
-jenkins-container |     at hudson.init.TaskMethodFinder.invoke(TaskMethodFinder.java:115)
-jenkins-container |     at hudson.init.TaskMethodFinder$TaskImpl.run(TaskMethodFinder.java:185)
-jenkins-container |     at org.jvnet.hudson.reactor.Reactor.runTask(Reactor.java:305)
-jenkins-container |     at jenkins.model.Jenkins$5.runTask(Jenkins.java:1160)
-jenkins-container |     at org.jvnet.hudson.reactor.Reactor$2.run(Reactor.java:222)
-jenkins-container |     at org.jvnet.hudson.reactor.Reactor$Node.run(Reactor.java:121)
-jenkins-container |     at jenkins.security.ImpersonatingExecutorService$1.run(ImpersonatingExecutorService.java:70)
-jenkins-container |     at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
-jenkins-container |     at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
-jenkins-container |     at java.base/java.lang.Thread.run(Thread.java:829)
-jenkins-container | Caused: org.jvnet.hudson.reactor.ReactorException
-jenkins-container |     at org.jvnet.hudson.reactor.Reactor.execute(Reactor.java:291)
-jenkins-container |     at jenkins.InitReactorRunner.run(InitReactorRunner.java:49)
-jenkins-container |     at jenkins.model.Jenkins.executeReactor(Jenkins.java:1195)
-jenkins-container |     at jenkins.model.Jenkins.<init>(Jenkins.java:985)
-jenkins-container |     at hudson.model.Hudson.<init>(Hudson.java:86)
-jenkins-container |     at hudson.model.Hudson.<init>(Hudson.java:82)
-jenkins-container |     at hudson.WebAppMain$3.run(WebAppMain.java:247)
-jenkins-container | Caused: hudson.util.HudsonFailedToLoad
-jenkins-container |     at hudson.WebAppMain$3.run(WebAppMain.java:264)
-jenkins-container | 2022-09-23 11:44:01.254+0000 [id=32]        INFO    hudson.lifecycle.Lifecycle#onStatusUpdate: Stopping Jenkins
-jenkins-container | 2022-09-23 11:44:01.257+0000 [id=32]        INFO    jenkins.model.Jenkins$16#onAttained: Started termination
-jenkins-container | 2022-09-23 11:44:01.263+0000 [id=32]        INFO    jenkins.model.Jenkins$16#onAttained: Completed termination
-jenkins-container | 2022-09-23 11:44:01.263+0000 [id=32]        INFO    jenkins.model.Jenkins#_cleanUpDisconnectComputers: Starting node disconnection
-jenkins-container | 2022-09-23 11:44:01.284+0000 [id=92]        WARNING h.ExtensionFinder$GuiceFinder$FaultTolerantScope$1#error: Failed to instantiate Key[type=jenkins.slaves.JnlpSlaveAgentProtocol4, annotation=[none]]; skipping this component
-jenkins-container | java.security.KeyStoreException: JENKINS-41987: no X509Certificate found; perhaps instance-identity plugin is not installed
-jenkins-container |     at jenkins.slaves.JnlpSlaveAgentProtocol4.<init>(JnlpSlaveAgentProtocol4.java:106)
-jenkins-container |     at jenkins.slaves.JnlpSlaveAgentProtocol4$$FastClassByGuice$$308450093.GUICE$TRAMPOLINE(<generated>)
-jenkins-container |     at jenkins.slaves.JnlpSlaveAgentProtocol4$$FastClassByGuice$$308450093.apply(<generated>)
-jenkins-container |     at com.google.inject.internal.DefaultConstructionProxyFactory$FastClassProxy.newInstance(DefaultConstructionProxyFactory.java:82)
-jenkins-container |     at com.google.inject.internal.ConstructorInjector.provision(ConstructorInjector.java:114)
-jenkins-container |     at com.google.inject.internal.ConstructorInjector.access$000(ConstructorInjector.java:33)
-jenkins-container |     at com.google.inject.internal.ConstructorInjector$1.call(ConstructorInjector.java:98)
-jenkins-container |     at com.google.inject.internal.ProvisionListenerStackCallback$Provision.provision(ProvisionListenerStackCallback.java:109)
-jenkins-container |     at hudson.ExtensionFinder$GuiceFinder$SezpozModule.onProvision(ExtensionFinder.java:568)
-jenkins-container |     at com.google.inject.internal.ProvisionListenerStackCallback$Provision.provision(ProvisionListenerStackCallback.java:117)
-jenkins-container |     at com.google.inject.internal.ProvisionListenerStackCallback.provision(ProvisionListenerStackCallback.java:66)
-jenkins-container |     at com.google.inject.internal.ConstructorInjector.construct(ConstructorInjector.java:93)
-jenkins-container |     at com.google.inject.internal.ConstructorBindingImpl$Factory.get(ConstructorBindingImpl.java:296)
-jenkins-container |     at com.google.inject.internal.ProviderToInternalFactoryAdapter.get(ProviderToInternalFactoryAdapter.java:40)
-jenkins-container | Caused: com.google.inject.ProvisionException: Unable to provision, see the following errors:
-jenkins-container |
-jenkins-container | 1) [Guice/ErrorInjectingConstructor]: KeyStoreException: JENKINS-41987: no X509Certificate found; perhaps instance-identity plugin is not installed
-jenkins-container |   at JnlpSlaveAgentProtocol4.<init>(JnlpSlaveAgentProtocol4.java:102)
-jenkins-container |
-jenkins-container | Learn more:
-jenkins-container |   https://github.com/google/guice/wiki/ERROR_INJECTING_CONSTRUCTOR
-jenkins-container |
-jenkins-container | 1 error
-jenkins-container |
-jenkins-container | ======================
-jenkins-container | Full classname legend:
-jenkins-container | ======================
-jenkins-container | JnlpSlaveAgentProtocol4: "jenkins.slaves.JnlpSlaveAgentProtocol4"
-jenkins-container | KeyStoreException:       "java.security.KeyStoreException"
-jenkins-container | ========================
-jenkins-container | End of classname legend:
-jenkins-container | ========================
-jenkins-container |
-jenkins-container |     at com.google.inject.internal.InternalProvisionException.toProvisionException(InternalProvisionException.java:251)
-jenkins-container |     at com.google.inject.internal.ProviderToInternalFactoryAdapter.get(ProviderToInternalFactoryAdapter.java:43)
-jenkins-container |     at com.google.inject.internal.SingletonScope$1.get(SingletonScope.java:169)
-jenkins-container |     at hudson.ExtensionFinder$GuiceFinder$FaultTolerantScope$1.get(ExtensionFinder.java:444)
-jenkins-container |     at com.google.inject.internal.InternalFactoryToProviderAdapter.get(InternalFactoryToProviderAdapter.java:45)
-jenkins-container |     at com.google.inject.internal.InjectorImpl$1.get(InjectorImpl.java:1100)
-jenkins-container |     at hudson.ExtensionFinder$GuiceFinder._find(ExtensionFinder.java:402)
-jenkins-container |     at hudson.ExtensionFinder$GuiceFinder.find(ExtensionFinder.java:393)
-jenkins-container |     at hudson.ClassicPluginStrategy.findComponents(ClassicPluginStrategy.java:359)
-jenkins-container |     at hudson.ExtensionList.load(ExtensionList.java:384)
-jenkins-container |     at hudson.ExtensionList.ensureLoaded(ExtensionList.java:320)
-jenkins-container |     at hudson.ExtensionList.iterator(ExtensionList.java:172)
-jenkins-container |     at jenkins.AgentProtocol.of(AgentProtocol.java:111)
-jenkins-container |     at hudson.TcpSlaveAgentListener$ConnectionHandler.run(TcpSlaveAgentListener.java:277)
-jenkins-container | 2022-09-23 11:44:01.305+0000 [id=32]        INFO    jenkins.model.Jenkins#_cleanUpShutdownPluginManager: Stopping plugin manager
-jenkins-container | 2022-09-23 11:44:01.305+0000 [id=32]        INFO    jenkins.model.Jenkins#_cleanUpPersistQueue: Persisting build queue
-jenkins-container | 2022-09-23 11:44:01.312+0000 [id=32]        INFO    jenkins.model.Jenkins#_cleanUpAwaitDisconnects: Waiting for node disconnection completion
-jenkins-container | 2022-09-23 11:44:01.313+0000 [id=32]        INFO    hudson.lifecycle.Lifecycle#onStatusUpdate: Jenkins stopped
-```
-
-::::
+:::
 
 ## 🤔Q-02. Jenkin インスタンスの取得方法
 
@@ -1119,10 +813,10 @@ for (p in permissions) {
 
 :::
 
-## 🤔Q-00. Permission クラス定数の一覧取得方法は?
+## 🤔Q-06. Permission クラス定数の一覧取得方法は?
 
 以下の部分で、各 `Permission` は、`hudson.security.Permission.ALL` に登録されているので、
-これを呼べばで取得できます。
+これを呼べば一覧で取得できます。
 
 https://github.com/jenkinsci/jenkins/blob/master/core/src/main/java/hudson/security/Permission.java#L140-L156
 
@@ -1133,16 +827,16 @@ def groups = hudson.security.PermissionGroup.getAll()
 groups.stream().map{it.getPermissions()}.collect().flatten()
 ```
 
-## 🤔Q-06. `role-strategy` では、どのように権限の一覧を取得している?
+## 🤔Q-07. `role-strategy` では、どのように権限の一覧を取得している?
 
 ここでは、タイプに応じて種類からグループを絞っています。
 https://github.com/jenkinsci/role-strategy-plugin/blob/master/src/main/java/com/michelin/cio/hudson/plugins/rolestrategy/RoleBasedAuthorizationStrategy.java#L969-L1005
 
-## 🤔Q-07. スクリプトで初回追加する場合の注意は?
+## 🤔Q-08. スクリプトで初回追加する場合の注意は?
 
 グローバルセキュリティと違って、自動で `admin` を作ってくれないので、ログインできなくなる場合に注意しましょう。
 
-## 🤔Q-08. 内部の実装は?
+## 🤔Q-09. 内部の実装は?
 
 何が裏で起きているのでしょうか?
 
@@ -1163,12 +857,12 @@ https://github.com/jenkinsci/role-strategy-plugin/blob/master/src/main/java/com/
 HTML に埋め込まれた `[hudson.model.Hudson.Read]` の形式から、
 `fromId(String)` で変換して、内部では Permission オブジェクトを持っています。
 
-## 🤔Q-09. Groovy Hook Script の実行順序は?
+## 🤔Q-10. Groovy Hook Script の実行順序は?
 
 辞書順らしいです[^groovy-hook-scripts]。
 [^groovy-hook-scripts]: [Groovy Hook Scripts](https://www.jenkins.io/doc/book/managing/groovy-hook-scripts/)
 
-## 🤔Q-10. `jenkins.model.Jenkins.RUN_SCRIPTS` があれば管理者権限無しでスクリプト実行できる?
+## 🤔Q-11. `jenkins.model.Jenkins.RUN_SCRIPTS` があれば管理者権限無しでスクリプト実行できる?
 
 残念ながらできません。
 古いドキュメント[^jenkins-matrix-based-security]を見る限りだと以前はできたようですが、権限昇格される虞から、無理になったようです[^jep-223]。
@@ -1178,6 +872,586 @@ https://github.com/jenkinsci/jenkins/blob/master/core/src/main/java/jenkins/mode
 
 [^jenkins-matrix-based-security]: [Jenkins : Matrix-based security](https://wiki.jenkins.io/JENKINS/Matrix-based-security.html)
 [^jep-223]: https://github.com/jenkinsci/jep/blob/master/jep/223/README.adoc
+
+## 🤔Q-12. 権限の関係は?
+
+memaid.js でクラス図を書きました。
+
+![Permission クラス定数の関係](/images/jenkins-user-permission/permissions.png)
+_Permission クラス定数の関係_
+
+各 `PermissionGroup` 毎のクラス図は以下を参考にしてください。
+
+- [hudson.model.Hudson](https://github.com/miya789/Zenn/blob/main/images/jenkins-user-permission/hudson.model.Hudson.svg)
+
+  - :::details mermaid.js のソースコード
+
+    ```
+    classDiagram
+    direction BT
+
+    class Permission HUDSON_ADMINISTER
+    class Permission READ
+    class ADMINISTER
+    class MANAGE {
+      group:        PERMISSIONS;
+      name:         "Manage";
+      description:  Messages._Jenkins_Manage_Description();
+      impliedBy:    ADMINISTER;
+      boolean:      SystemProperties.getBoolean("jenkins.security.ManagePermission");
+      scope:        PermissionScope.JENKINS;
+    }
+    class SYSTEM_READ {
+      group:        PERMISSIONS;
+      name:         "SystemRead";
+      description:  Messages._Jenkins_SystemRead_Description();
+      impliedBy:    ADMINISTER;
+      boolean:      SystemProperties.getBoolean("jenkins.security.SystemReadPermission");
+      scope:        PermissionScope.JENKINS;
+    }
+    class READ {
+      group:        PERMISSIONS;
+      name:         "Read";
+      description:  Messages._Hudson_ReadPermission_Description();
+      impliedBy:    Permission.READ;
+      scope:        PermissionScope.JENKINS;
+    }
+    class RUN_SCRIPTS {
+      group:        PERMISSIONS;
+      name:         "RunScripts";
+      description:  Messages._Hudson_RunScriptsPermission_Description();
+      impliedBy:    ADMINISTER;
+      scope:        PermissionScope.JENKINS;
+    }
+
+    ADMINISTER --> Permission HUDSON_ADMINISTER
+    MANAGE --> ADMINISTER
+    SYSTEM_READ --> ADMINISTER
+    READ --> Permission READ
+    RUN_SCRIPTS --> ADMINISTER
+    ```
+
+    :::
+
+- [com.cloudbees.plugins.credentials.CredentialsProvider]()
+
+  - :::details mermaid.js のソースコード
+
+    ```
+
+    ```
+
+    :::
+
+- [hudson.model.Computer](https://github.com/miya789/Zenn/blob/main/images/jenkins-user-permission/hudson.model.Computer.svg)
+
+  - :::details mermaid.js のソースコード
+
+    ```
+    classDiagram
+    direction BT
+
+    class CONFIGURE {
+      group:        PERMISSIONS;
+      name:         "Configure";
+      description:  Messages._Computer_ConfigurePermission_Description();
+      impliedBy:    Permission.CONFIGURE;
+      scope:        PermissionScope.COMPUTER;
+    }
+    class EXTENDED_READ {
+      group:        PERMISSIONS;
+      name:         "ExtendedRead";
+      description:  Messages._Computer_ExtendedReadPermission_Description();
+      impliedBy:    CONFIGURE;
+      boolean:      SystemProperties.getBoolean("hudson.security.ExtendedReadPermission");
+      scope:        PermissionScope.COMPUTER;
+    }
+    class DELETE {
+      group:        PERMISSIONS;
+      name:         "Delete";
+      description:  Messages._Computer_DeletePermission_Description();
+      impliedBy:    Permission.DELETE;
+      scope:        PermissionScope.COMPUTER;
+    }
+    class CREATE {
+      group:        PERMISSIONS;
+      name:         "Create";
+      description:  Messages._Computer_CretePermission_Description(),;
+      impliedBy:    Permission.CREATE;
+      scope:        PermissionScope.JENKINS;
+    }
+    class DISCONNECT {
+      group:        PERMISSIONS;
+      name:         "Disconnect";
+      description:  Messages._Computer_DisconnectPermission_Description();
+      impliedBy:    Jenkins.ADMINISTER;
+      scope:        PermissionScope.COMPUTER;
+    }
+    class CONNECT {
+      group:        PERMISSIONS;
+      name:         "Connect";
+      description:  Messages._Computer_ConnectPermission_Description();
+      impliedBy:    DISCONNECT;
+      scope:        PermissionScope.COMPUTER;
+    }
+    class BUILD {
+      group:        PERMISSIONS;
+      name:         "Build";
+      description:  Messages._Computer_BuildPermission_Description();
+      impliedBy:    Permission.WRITE;
+      scope:        PermissionScope.COMPUTER;
+    }
+
+    CONFIGURE --> Permission CONFIGURE
+    EXTENDED_READ --> CONFIGURE
+    DELETE --> Permission DELETE
+    CREATE --> Permission CREATE
+    DISCONNECT --> Jenkins ADMINISTER
+    CONNECT --> DISCONNECT
+    BUILD --> Permission WRITE
+    ```
+
+    :::
+
+- [hudson.model.Item](https://github.com/miya789/Zenn/blob/main/images/jenkins-user-permission/hudson.model.Item.svg)
+
+  - :::details mermaid.js のソースコード
+
+    ```
+    classDiagram
+    direction BT
+
+    class CREATE {
+      group:        PERMISSIONS;
+      name:         "Create";
+      description:  Messages._Item_CREATE_description();
+      impliedBy:    Permission.CREATE;
+      scope:        PermissionScope.ITEM_GROUP;
+    }
+    class DELETE {
+      group:        PERMISSIONS;
+      name:         "Delete";
+      description:  Messages._Item_DELETE_description();
+      impliedBy:    Permission.DELETE;
+      scope:        PermissionScope.ITEM;
+    }
+    class CONFIGURE {
+      group:        PERMISSIONS;
+      name:         "Configure";
+      description:  Messages._Item_CONFIGURE_description();
+      impliedBy:    Permission.CONFIGURE;
+      scope:        PermissionScope.ITEM;
+    }
+    class READ {
+      group:        PERMISSIONS;
+      name:         "Read";
+      description:  Messages._Item_READ_description();
+      impliedBy:    Permission.READ;
+      scope:        PermissionScope.ITEM;
+    }
+    class DISCOVER {
+      group:        PERMISSIONS;
+      name:         "Discover";
+      description:  Messages._AbstractProject_DiscoverPermission_Description();
+      impliedBy:    READ;
+      scope:        PermissionScope.ITEM;
+    }
+    class EXTENDED_READ {
+      group:        PERMISSIONS;
+      name:         "ExtendedRead";
+      description:  Messages._AbstractProject_ExtendedReadPermission_Description();
+      impliedBy:    CONFIGURE;
+      enable:       SystemProperties.getBoolean("hudson.security.ExtendedReadPermission");
+      scope:        PermissionScope.ITEM;
+    }
+    class BUILD {
+      group:        PERMISSIONS;
+      name:         "Build";
+      description:  Messages._AbstractProject_BuildPermission_Description();
+      impliedBy:    Permission.UPDATE;
+      scope:        PermissionScope.ITEM;
+    }
+    class WORKSPACE {
+      group:        PERMISSIONS;
+      name:         "Workspace";
+      description:  Messages._AbstractProject_WorkspacePermission_Description();
+      impliedBy:    Permission.READ;
+      scope:        PermissionScope.ITEM;
+    }
+    class WIPEOUT {
+      group:        PERMISSIONS;
+      name:         "WipeOut";
+      description:  Messages._AbstractProject_WipeOutPermission_Description();
+      impliedBy:    null;
+      enable:       Functions.isWipeOutPermissionEnabled();
+      scope:        PermissionScope.ITEM;
+    }
+    class CANCEL {
+      group:        PERMISSIONS;
+      name:         "Cancel";
+      description:  Messages._AbstractProject_CancelPermission_Description();
+      impliedBy:    Permission.UPDATE;
+      scope:        PermissionScope.ITEM;
+    }
+
+    CREATE --> Permission CREATE
+    DELETE --> Permission DELETE
+    CONFIGURE --> Permission CONFIGURE
+    READ --> Permission READ
+    DISCOVER --> READ
+    EXTENDED_READ --> CONFIGURE
+    BUILD --> Permission UPDATE
+    WORKSPACE --> Permission READ
+    CANCEL --> Permission UPDATE
+    ```
+
+    :::
+
+- [hudson.model.Run](https://github.com/miya789/Zenn/blob/main/images/jenkins-user-permission/hudson.model.Run.svg)
+
+  - :::details mermaid.js のソースコード
+
+    ```
+
+    ```
+
+    :::
+
+- [hudson.model.View](https://github.com/miya789/Zenn/blob/main/images/jenkins-user-permission/hudson.model.View.svg)
+
+  - :::details mermaid.js のソースコード
+
+    ```
+    classDiagram
+    direction BT
+
+    class CREATE {
+      group:        PERMISSIONS;
+      name:         "Create";
+      description:  Messages._View_CreatePermission_Description();
+      impliedBy:    Permission.CREATE;
+      scope:        PermissionScope.ITEM_GROUP;
+    }
+    class DELETE {
+      group:        PERMISSIONS;
+      name:         "Delete";
+      description:  Messages._View_DeletePermission_Description();
+      impliedBy:    Permission.DELETE;
+      scope:        PermissionScope.ITEM_GROUP;
+    }
+    class CONFIGURE {
+      group:        PERMISSIONS;
+      name:         "Configure";
+      description:  Messages._View_ConfigurePermission_Description();
+      impliedBy:    Permission.CONFIGURE;
+      scope:        PermissionScope.ITEM_GROUP;
+    }
+    class READ {
+      group:        PERMISSIONS;
+      name:         "Read";
+      description:  Messages._View_ReadPermission_Description();
+      impliedBy:    Permission.READ;
+      scope:        PermissionScope.ITEM_GROUP;
+    }
+
+    CREATE --> Permission CREATE
+    DELETE --> Permission DELETE
+    CONFIGURE --> Permission CONFIGURE
+    READ --> Permission READ
+    ```
+
+    :::
+
+- hudson.plugins.jobConfigHistory.JobConfigHistory: 一つしか無いので省略
+
+- hudson.scm.SCM: 一つしか無いので省略
+
+- [hudson.security.Permission](https://github.com/miya789/Zenn/blob/main/images/jenkins-user-permission/hudson.security.Permission.svg)
+
+  - :::details mermaid.js のソースコード
+
+    ```
+    classDiagram
+    direction BT
+
+    class FULL_CONTROL {
+      HUDSON_ADMINISTER e;
+      FULL_CONTROL(this.e);
+
+      group:        GROUP;
+      name:         "FullControl";
+      description:  null;
+      impliedBy:    HUDSON_ADMINISTER;
+    }
+    class READ {
+      group:        GROUP;
+      name:         "GenericRead";
+      description:  null;
+      impliedBy:    HUDSON_ADMINISTER;
+    }
+    class WRITE {
+      group:        GROUP;
+      name:         "GenericWrite";
+      description:  null;
+      impliedBy:    HUDSON_ADMINISTER;
+    }
+    class CREATE {
+      group:        GROUP;
+      name:         "GenericCreate";
+      description:  null;
+      impliedBy:    WRITE;
+    }
+    class UPDATE {
+      group:        GROUP;
+      name:         "GenericUpdate";
+      description:  null;
+      impliedBy:    WRITE;
+    }
+    class DELETE {
+      group:        GROUP;
+      name:         "GenericDelete";
+      description:  null;
+      impliedBy:    WRITE;
+    }
+    class CONFIGURE {
+      group:        GROUP;
+      name:         "GenericConfigure";
+      description:  null;
+      impliedBy:    UPDATE;
+    }
+    class HUDSON_ADMINISTER {
+      group:        HUDSON_PERMISSIONS;
+      name:         "Administer";
+      description:  hudson.model.Messages._Hudson_AdministerPermission_Description();
+      impliedBy:    null;
+    }
+
+    FULL_CONTROL --> HUDSON_ADMINISTER
+    READ --> HUDSON_ADMINISTER
+    WRITE --> HUDSON_ADMINISTER
+    CREATE --> WRITE
+    UPDATE --> WRITE
+    DELETE --> WRITE
+    CONFIGURE --> UPDATE
+    ```
+
+    :::
+
+## 🤔Q-13. やり方は妥当?
+
+以下が参考になります。
+
+https://github.com/jenkinsci/matrix-auth-plugin/blob/master/src/test/java/hudson/security/ProjectMatrixAuthorizationStrategyTest.java#L31-L64
+
+初めに Jenkins ユーザーを作って、realm に追加してから、matrix 式の権限を付加してます。
+
+## 🤔Q-14. Groovy スクリプトの内容をシステムログとして残すには?
+
+以下で可能です。
+
+```groovy
+// 4. ログにも残せるので推奨
+LOGGER = java.util.logging.Logger.getLogger(hudson.security.GlobalMatrixAuthorizationStrategy.class.getName());
+LOGGER.log(java.util.logging.Level.INFO, "Update \"{0}\" by adding \"{1}\"", strategy, user_name);
+```
+
+## 🤔Q-15. 公式リポジトリのビルド方法は?
+
+以下で開発コンテナとして可能
+
+```json:/workspaces/jenkins/.devcontainer/devcontainer.json
+// For format details, see https://aka.ms/vscode-remote/devcontainer.json or this file's README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.195.0/containers/java
+{
+	"name": "Java",
+	"build": {
+		"dockerfile": "Dockerfile",
+		"args": {
+			// Update the VARIANT arg to pick a Java version: 8, 11, 17
+			// Append -bullseye or -buster to pin to an OS version.
+			// Use the -bullseye variants on local arm64/Apple Silicon.
+			"VARIANT": "11-bullseye",
+			// Options
+			"INSTALL_MAVEN": "true",
+			"MAVEN_VERSION": "3.8.6",
+			"INSTALL_GRADLE": "false",
+			"NODE_VERSION": "lts/*"
+		}
+	},
+	// Configure tool-specific properties.
+	"customizations": {
+		// Configure properties specific to VS Code.
+		"vscode": {
+			// Set *default* container specific settings.json values on container create.
+			"settings": {
+				"maven.executable.path": "/usr/local/sdkman/candidates/maven/current/bin/mvn"
+			},
+			// Add the IDs of extensions you want installed when the container is created.
+			"extensions": [
+				"vscjava.vscode-java-pack"
+			]
+		}
+	},
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+	// Use 'postCreateCommand' to run commands after the container is created.
+	// "postCreateCommand": "java -version",
+	// Uncomment to connect as a non-root user. See https://aka.ms/vscode-remote/containers/non-root.
+	"remoteUser": "vscode"
+}
+```
+
+```json:/workspaces/jenkins/.vscode/launch.json
+{
+  // IntelliSense を使用して利用可能な属性を学べます。
+  // 既存の属性の説明をホバーして表示します。
+  // 詳細情報は次を確認してください: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Launch Current File",
+      "request": "launch",
+      "mainClass": "${file}"
+    },
+    {
+      "type": "java",
+      "name": "Launch CLI",
+      "request": "launch",
+      "mainClass": "hudson.cli.CLI",
+      "projectName": "cli"
+    },
+    {
+      "type": "java",
+      "name": "Launch Main",
+      "request": "launch",
+      "mainClass": "hudson.Main",
+      "projectName": "jenkins-core"
+    },
+    {
+      "type": "java",
+      "name": "Launch DCOMSandbox",
+      "request": "launch",
+      "mainClass": "hudson.os.DCOMSandbox",
+      "projectName": "jenkins-core"
+    },
+    {
+      "type": "java",
+      "name": "Launch SUTester",
+      "request": "launch",
+      "mainClass": "hudson.os.SUTester",
+      "projectName": "jenkins-core"
+    },
+    {
+      "type": "java",
+      "name": "Launch RunIdMigrator",
+      "request": "launch",
+      "mainClass": "jenkins.model.RunIdMigrator",
+      "projectName": "jenkins-core"
+    },
+    {
+      "type": "java",
+      "name": "Launch DomainValidatorTest",
+      "request": "launch",
+      "mainClass": "jenkins.org.apache.commons.validator.routines.DomainValidatorTest",
+      "projectName": "jenkins-core"
+    },
+    {
+      "type": "java",
+      "name": "Launch UrlValidatorTest",
+      "request": "launch",
+      "mainClass": "jenkins.org.apache.commons.validator.routines.UrlValidatorTest",
+      "projectName": "jenkins-core"
+    },
+    // {
+    //   "type": "java",
+    //   "name": "Launch Main(1)",
+    //   "request": "launch",
+    //   "mainClass": "executable.Main",
+    //   "projectName": "jenkins-war",
+    // },
+    {
+      "type": "java",
+      "name": "Launch Main(1)",
+      "request": "launch",
+      // "mainClass": "executable.Main",
+      "projectName": "war",
+      "args": "-Xmx1100m -classpath /usr/local/sdkman/candidates/maven/current/boot/plexus-classworlds-2.6.0.jar -Dclassworlds.conf=/usr/local/sdkman/candidates/maven/current/bin/m2.conf -Dmaven.home=/usr/local/sdkman/candidates/maven/current -Dlibrary.jansi.path=/usr/local/sdkman/candidates/maven/current/lib/jansi-native -Dmaven.multiModuleProjectDirectory=workspaces/jenkins org.codehaus.plexus.classworlds.launcher.Launcher -pl war"
+    }
+  ]
+}
+```
+
+最新の tag に checkout する。
+
+:::message
+かなりメモリを食うので注意。
+:::
+
+自前でインストールするなら以下を参照
+
+- https://www.linuxmania.jp/apt-install-java.html
+
+- https://maven.apache.org/install.html
+- https://maven3.kengo-toda.jp/module/option
+- https://kazuhira-r.hatenablog.com/entry/20150407/1428419372
+
+:::message
+バージョンは以下で行いました。
+
+```bash
+$ javac -version
+Picked up _JAVA_OPTIONS: -Dawt.useSystemAAFontSettings=on -Dswing.aatext=true
+javac 11.0.16
+
+$ java -version
+Picked up _JAVA_OPTIONS: -Dawt.useSystemAAFontSettings=on -Dswing.aatext=true
+openjdk version "11.0.16" 2022-07-19
+OpenJDK Runtime Environment (build 11.0.16+8-post-Debian-1)
+OpenJDK 64-Bit Server VM (build 11.0.16+8-post-Debian-1, mixed mode, sharing)
+
+$ mvn -v
+Picked up _JAVA_OPTIONS: -Dawt.useSystemAAFontSettings=on -Dswing.aatext=true
+Apache Maven 3.8.6 (84538c9988a25aec085021c365c560670ad80f63)
+Maven home: /usr/share/maven
+Java version: 11.0.16, vendor: Debian, runtime: /usr/lib/jvm/java-11-openjdk-amd64
+Default locale: en_US, platform encoding: UTF-8
+OS name:        "linux", version: "5.16.0-kali7-amd64", arch: "amd64", family: "unix"
+
+$ node -v
+v18.7.0
+```
+
+:::
+
+## 🤔Q-16. プラグインのデバッグは?
+
+以下を参考に
+https://jenkinsci.github.io/maven-hpi-plugin/run-mojo.html
+
+## 🤔Q-17. `PermissionScope` って?
+
+`PermissionGroup` との違いは把握できてない状況ですが、少なくとも以下が確認されました。
+
+```java:PermissionScope
+public static final PermissionScope JENKINS     = new PermissionScope(Jenkins.class);
+public static final PermissionScope ITEM_GROUP  = new PermissionScope(ItemGroup.class,JENKINS);
+public static final PermissionScope ITEM        = new PermissionScope(Item.class,ITEM_GROUP);
+public static final PermissionScope RUN         = new PermissionScope(Run.class,ITEM);
+public static final PermissionScope COMPUTER    = new PermissionScope(Computer.class,JENKINS);
+```
+
+## 🗒️C-1. 取得系コードのサンプル
+
+```groovy:
+hudson.security.SecurityRealm.all()
+// [hudson.security.HudsonPrivateSecurityRealm$DescriptorImpl@5454d763, hudson.security.LegacySecurityRealm$DescriptorImpl@687047d7, hudson.security.SecurityRealm$None$DescriptorImpl@1807eee9]
+
+def instance = Jenkins.getInstance()
+def strategy = instance.getAuthorizationStrategy()
+println instance.securityRealm.getAllUsers()
+println strategy.getGrantedPermissionEntries()
+```
 
 # 補足
 
