@@ -12,7 +12,7 @@ published_at: 2022-07-01 08:00
 https://github.com/GitCredentialManager/git-credential-manager
 
 - **[git-credential-manager](https://github.com/GitCredentialManager/git-credential-manager) (GCM)を使い、ブラウザ経由で 2 要素認証を突破しましょう。**
-- GCM を介す事で、自分でアクセストークンを**発行**・**管理**する手間が省けます。
+- GCM では、アクセストークンを**発行**・**管理**する手間を省ける**OAuth 2.0**が可能になります。
 - Windows の場合は、[Git for Windows](https://gitforwindows.org/)インストール時に GCM も設定可能ですが、
   他のプラットフォームでも自分でインストールすれば動作するようです。
 
