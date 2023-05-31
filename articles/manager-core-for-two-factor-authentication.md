@@ -116,13 +116,13 @@ GitHub のみ仕様が異なるようです。
 
 主に以下があります。
 
-| helper 名                   | 関連リポジトリ                                                                                           | 保存先                                  |
-| --------------------------- | -------------------------------------------------------------------------------------------------------- | --------------------------------------- |
-| `store`                     | [Git for Windows](https://github.com/git-for-windows/git) / [Git](https://github.com/git/git/)(built-in) | テキストファイル                        |
-| `cache`                     | [Git for Windows](https://github.com/git-for-windows/git) / [Git](https://github.com/git/git/)(built-in) | ソケットファイル                        |
-| `wincred`/<br>`osxkeychain` | [Git for Windows](https://github.com/git-for-windows/git) / [Git](https://github.com/git/git/)(built-in) | 認証情報マネージャー /<br> キーチェーン |
-| `manager`                   | [Git Credential Manager for Windows](https://github.com/microsoft/Git-Credential-Manager-for-Windows)    | 認証情報マネージャー                    |
-| `manager-core`              | [Git Credential Manager (GCM)](https://github.com/GitCredentialManager/git-credential-manager)           | 認証情報マネージャー 等                 |
+| helper 名                        | 関連リポジトリ                                                                                           | 保存先                                  |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------- | --------------------------------------- |
+| `store`                          | [Git for Windows](https://github.com/git-for-windows/git) / [Git](https://github.com/git/git/)(built-in) | テキストファイル                        |
+| `cache`                          | [Git for Windows](https://github.com/git-for-windows/git) / [Git](https://github.com/git/git/)(built-in) | ソケットファイル                        |
+| `wincred`/<br>`osxkeychain`      | [Git for Windows](https://github.com/git-for-windows/git) / [Git](https://github.com/git/git/)(built-in) | 認証情報マネージャー /<br> キーチェーン |
+| `manager`                        | [Git Credential Manager for Windows](https://github.com/microsoft/Git-Credential-Manager-for-Windows)    | 認証情報マネージャー                    |
+| ~~`manager-core`~~/<br>`manager` | [Git Credential Manager (GCM)](https://github.com/GitCredentialManager/git-credential-manager)           | 認証情報マネージャー 等                 |
 
 [^git-tools-credential-storage]: [Git - 認証情報の保存](https://git-scm.com/book/ja/v2/Git-%E3%81%AE%E3%81%95%E3%81%BE%E3%81%96%E3%81%BE%E3%81%AA%E3%83%84%E3%83%BC%E3%83%AB-%E8%AA%8D%E8%A8%BC%E6%83%85%E5%A0%B1%E3%81%AE%E4%BF%9D%E5%AD%98)
 
@@ -200,7 +200,7 @@ _資格情報マネージャー[^credential-manager]_
 
 まず、Git をインストールすると、built-in で入っているのが、`store`,`cache`で、
 Windows / Mac だと`wincred`/`osxkeychain`も利用可能です[^git-tools-credential-storage]。
-更に、`manager-core`というものも最近推奨され始めています。
+更に、~~`manager-core`~~`manager`というものも最近推奨され始めています。
 では上から順に見てみましょう。
 
 - `store`
@@ -248,13 +248,20 @@ Windows / Mac だと`wincred`/`osxkeychain`も利用可能です[^git-tools-cred
 - `manager`
 
   古い記事だとこれの事しか書いてないですが、
-  既に`manager-core`に統合され、リポジトリはアーカイブ済みです。
+  既に ~~`manager-core`~~`manager`に統合され、リポジトリはアーカイブ済みです。
   Mac や Linux 用のものも同様です。
   :::message alert
-  `manager`はアーカイブ済みであり、公式に`manager-core`で代替するようにアナウンスされているので、これを使いましょう。
+  `manager`はアーカイブ済みであり、公式に ~~`manager-core`~~`manager`で代替するようにアナウンスされているので、これを使いましょう。
   (Windows の場合は、Git を入れるだけで済みますが)
   名前が紛らわしく、未だに`manager`を推奨しているネット記事が残っていますが、
-  **`manager-core`の正式名**は、[**Git Credential Manager (GCM)**](https://github.com/GitCredentialManager/git-credential-manager)なので注意しましょう。
+  **~~`manager-core`~~`manager`の正式名**は、[**Git Credential Manager (GCM)**](https://github.com/GitCredentialManager/git-credential-manager)なので注意しましょう。
+  :::
+
+  :::message
+  2022 年 10 月を以て、`manager-core` から `manager` に変わった様です。
+  https://github.com/git-ecosystem/git-credential-manager/blob/v2.1.2/docs/rename.md
+
+  アップデート済みの場合は、警告メッセージが出るようになっているかと思いますので、適宜リンク先の説明に従って再設定してください。
   :::
 
 - `magaer-core`
@@ -437,7 +444,7 @@ git config --global credential.https://dev.azure.com.useHttpPath true
 前項まで使う事はできますが、更に上級者向けの設定を紹介します。
 
 [アクセストークンの管理方法](#アクセストークンの管理方法)で触れたように様々な helper が存在しますが、
-`manager-core`はこれらを組み合わせる事も可能です。
+~~`manager-core`~~`manager`はこれらを組み合わせる事も可能です。
 一覧は以下ですが、詳細は公式のドキュメント[^gcm-credstores]先から確認してください。
 
 [^gcm-credstores]: https://github.com/GitCredentialManager/git-credential-manager/blob/main/docs/credstores.md
