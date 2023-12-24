@@ -1,0 +1,125 @@
+@startuml OAuth 2.0 - Authorization code grant
+title OAuth 2.0 - Authorization code grant
+
+box "Client side" #MistyRose
+    actor "User" as user
+    participant "Git" as git
+    participant "Edge" as edge
+    participant "GCM" as gcm
+    participant "Credential Manager" as cm
+end box
+box "Server side" #LightCyan
+    participant "GitLab OAuth 2.0" as auth
+    participant "GitLab" as gitlab
+end box
+
+activate user
+activate auth
+activate gitlab
+
+user -> git: git clone
+activate git
+
+git -> gitlab: Request
+note right
+    GET /${gr}/${pr}.git/info/refs?service=git-upload-pack
+end note
+gitlab -> git: Response: 401
+
+git -> gcm: git credential-manager get
+activate gcm
+note right
+    git credential-manager get <<EOS
+    protocol=https
+    host=gitlab.example.com
+    EOS
+end note
+
+==: start OAuth grant :==
+
+user <- gcm: Show sign-in button
+user -> edge: Click sign-in button
+activate edge
+
+edge -> auth: Request "Authorization request" page
+note right
+    GET /oauth/authorize?
+    response_type=code&
+    client_id=${client_id}&
+    state=${state}&
+    code_challenge_method=S256&
+    code_challenge=${code_challenge}&
+    redirect_uri=http%3a%2f%2f127.0.0.1%3a57414%2f&
+    scope=write_repository+read_repository
+end note
+edge <- auth: Response: 200
+
+edge -> auth: ???
+note right
+    GET /oauth/undefined
+end note
+edge <- auth: Response: 404
+
+user -> edge: Click button in "Authorization request"
+edge -> auth: Authorization request
+note right
+    POST /oauth/authorize
+    HTML Form URL Encoded: application/x-www-form-urlencoded
+        Form item: "authenticity_token" = "${authenticity_token}"
+        Form item: "client_id" = "${client_id}"
+        Form item: "redirect_uri" = "http://127.0.0.1:57414/"
+        Form item: "state" = "${state}"
+        Form item: "response_type" = "code"
+        Form item: "scope" = "write_repository read_repository"
+        Form item: "nonce" = ""
+        Form item: "code_challenge" = "${code_challenge}"
+        Form item: "code_challenge_method" = "S256"
+end note
+edge <- auth: Response: 302 (grant a code)
+
+edge -> gcm: Redirect: Notify authorization code
+note right
+    GET /?
+    code=${code}&
+    state=${state}
+end note
+edge <- gcm: Response: 200
+
+gcm -> auth: Request access token
+note right
+    POST /oauth/token
+    HTML Form URL Encoded: application/x-www-form-urlencoded
+        Form item: grant_type=authorization_code
+        Form item: code=${code}
+        Form item: code_verifier=${code_verifier}
+        Form item: client_id=${client_id}
+        Form item: client_secret=${client_secret}
+        Form item: redirect_uri=http%3A%2F%2F127.0.0.1%3A50762%2F
+end note
+gcm <- auth: Response: 200
+
+==: end OAuth grant :==
+
+git <- gcm: username / password
+git -> gitlab: Request
+note right
+    GET /${gr}/${pr}.git/info/refs?service=git-upload-pack
+    username: oauth2 / password: ${access token}
+end note
+git <- gitlab: Response: 200
+git -> gitlab: Request
+note right
+    POST /${gr}/${pr}.git/git-upload-pack
+    username: oauth2 / password: ${access token}
+end note
+git <- gitlab: Response: 200
+
+git -> gcm: git credential-manager store
+gcm -> cm: Save access token
+deactivate gcm
+
+user <- git: Response
+deactivate git
+deactivate user
+
+@enduml
